@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <nextCatalog catalog="nbproject/private/cache/retriever/catalog.xml"/>
+    <system systemId="http://192.168.0.101:8080/ESBQualificationToolProducer/WebServiceProducerService?wsdl" uri="src/jbiasa/192.168.0.101_8080/ESBQualificationToolProducer/WebServiceProducerService.wsdl"/>
+    <system systemId="http://192.168.0.101:8080/ESBQualificationToolProducer/WebServiceProducerService?xsd=1" uri="src/jbiasa/192.168.0.101_8080/ESBQualificationToolProducer/WebServiceProducerService.xsd_1.xsd"/>
+</catalog>
+
+

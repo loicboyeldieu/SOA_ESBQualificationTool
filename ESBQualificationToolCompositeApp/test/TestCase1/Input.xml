@@ -1,0 +1,8 @@
+<soapenv:Envelope xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservices.esbqualificationtool.com/">
+  <soapenv:Body>
+    <web:QualificationToolService>
+      <byteSize>100</byteSize>
+      <msProcessingTime>1000</msProcessingTime>
+    </web:QualificationToolService>
+  </soapenv:Body>
+</soapenv:Envelope>
