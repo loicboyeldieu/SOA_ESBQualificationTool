@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/">
   <SOAP-ENV:Body>
     <ns2:QualificationToolServiceResponse xmlns:S="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="http://webservices.esbqualificationtool.com/">
-      <return>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</return>
+      <return>AAAAAAAAAAAAAA==</return>
     </ns2:QualificationToolServiceResponse>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
