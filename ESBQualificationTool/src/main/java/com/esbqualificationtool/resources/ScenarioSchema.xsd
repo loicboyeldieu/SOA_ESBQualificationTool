@@ -1,0 +1,79 @@
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="scenario">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="name"/>
+                <xs:element name="flow" maxOccurs="unbounded" minOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="consumer"/>
+                            <xs:element type="totalExecTimeInSecType" name="totalExecTimeInSec"/>
+                            <xs:element type="frequencyInSecType" name="frequencyInSec"/>
+                            <xs:element type="delayBetweenEachRequestInMsType" name="delayBetweenEachRequestInMs"/>
+                            <xs:element name="request" maxOccurs="unbounded" minOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="producerType" name="producer"/>
+                                        <xs:element type="messageSizeType" name="messageSize"/>
+                                        <xs:element type="processingTimeInMsType" name="processingTimeInMs"/>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:integer" name="id" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:integer" name="id" use="required"/>
+                    </xs:complexType>
+                    <xs:unique name="requestID">
+                        <xs:selector xpath="./request"/>
+                        <xs:field xpath="@id"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="flowID">
+            <xs:selector xpath="./flow"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+    <xs:simpleType name="producerType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="producer1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="consumerType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="consumer1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="frequencyInSecType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="3600"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="delayBetweenEachRequestInMsType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="360000"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="totalExecTimeInSecType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="86400"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="messageSizeType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="1000000"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="processingTimeInMsType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="360000"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
