@@ -16,18 +16,18 @@ public class ConsumerLauncher {
             // and to the Producer we predifined for that launcher
             String flowStringFromQueue = "<flow id=\"1\"> " +
                 "<consumer>consumer1</consumer>" +
-                "<totalExecTimeInSec>60</totalExecTimeInSec>" +
-                "<frequencyInSec>5</frequencyInSec>" +
-                "<delayBetweenEachRequestInMs>1000</delayBetweenEachRequestInMs>" +
+                "<totalExecTimeInSec>30</totalExecTimeInSec>" +
+                "<frequencyInSec>10</frequencyInSec>" +
+                "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
                 "<request id=\"1\">" +
                 "<producer>producer1</producer>" +
-                "<messageSize>512</messageSize>" +
-                "<processingTimeInMs>20000</processingTimeInMs>" +
+                "<messageSize>2</messageSize>" +
+                "<processingTimeInMs>0</processingTimeInMs>" +
                 "</request>" +
                 "<request id=\"2\">" +
                 "<producer>producer1</producer>" +
-                "<messageSize>256</messageSize>" +
-                "<processingTimeInMs>5000</processingTimeInMs>" +
+                "<messageSize>5</messageSize>" +
+                "<processingTimeInMs>0</processingTimeInMs>" +
                 "</request>" +
                 "</flow>";
 
