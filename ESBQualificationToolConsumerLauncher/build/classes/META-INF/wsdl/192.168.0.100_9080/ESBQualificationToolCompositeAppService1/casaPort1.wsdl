@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://webservices.esbqualificationtool.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="ESBQualificationToolCompositeApp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="ESBQualificationToolCompositeApp">
+  <import location="http://192.168.0.100:9080/ESBQualificationToolCompositeApp-sun-http-binding/192.168.0.101_8080/ESBQualificationToolProducer/WebServiceProducerService.wsdl" namespace="http://webservices.esbqualificationtool.com/">
+    </import>
+  <portType name="dummyCasaPortType">
+  </portType>
+  <binding name="casaBinding1" type="ns:WebServiceProducer">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="QualificationToolService">
+      <soap:operation/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="ESBQualificationToolCompositeAppService1">
+    <port binding="tns:casaBinding1" name="casaPort1">
+      <soap:address location="http://192.168.0.100:9080/ESBQualificationToolCompositeAppService1/casaPort1"/>
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.3.1-hudson-417-SNAPSHOT. --><xs:schema xmlns:tns="http://webservices.esbqualificationtool.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://webservices.esbqualificationtool.com/">
+
+<xs:element name="QualificationToolService" type="tns:QualificationToolService"></xs:element>
+
+<xs:element name="QualificationToolServiceResponse" type="tns:QualificationToolServiceResponse"></xs:element>
+
+<xs:complexType name="QualificationToolService">
+<xs:sequence>
+<xs:element name="byteSize" type="xs:int"></xs:element>
+<xs:element name="msProcessingTime" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="QualificationToolServiceResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:base64Binary" nillable="true" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
