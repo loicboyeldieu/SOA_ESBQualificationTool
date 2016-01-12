@@ -3,60 +3,58 @@ package com.esbqualificationtool.consumerlauncher;
 import com.esbqualificationtool.jaxbhandler.JAXBFlowHandler;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
+
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConsumerLauncher {
 
-    public static void main(String[] args){
+    private static final String EXCHANGE_NAME = "consumer1";
 
-        while(true){
+    public static void main(String[] args) {
+
+
+        try {
             System.out.println("Flow launching.");
-            // Read the queue and take only message from the Consumer
             // and to the Producer we predifined for that launcher
-            String flowStringFromQueue = "<flow id=\"1\"> " +
-                "<consumer>consumer1</consumer>" +
-                "<totalExecTimeInSec>30</totalExecTimeInSec>" +
-                "<frequencyInSec>10</frequencyInSec>" +
-                "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
-                "<request id=\"1\">" +
-                "<producer>producer1</producer>" +
-                "<messageSize>2</messageSize>" +
-                "<processingTimeInMs>0</processingTimeInMs>" +
-                "</request>" +
-                "<request id=\"2\">" +
-                "<producer>producer1</producer>" +
-                "<messageSize>5</messageSize>" +
-                "<processingTimeInMs>0</processingTimeInMs>" +
-                "</request>" +
-                "</flow>";
+            // and to the Producer we predifined for that launcher
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("192.168.0.104");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+            channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+            String queueName = channel.queueDeclare().getQueue();
+            channel.queueBind(queueName, EXCHANGE_NAME, "");
+            System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+            Consumer consumer = new DefaultConsumer(channel) {
 
-            JAXBFlowHandler jaxbFlowHandler = new JAXBFlowHandler(flowStringFromQueue);
-            Flow flow = jaxbFlowHandler.getFlow();
-
-            long startTime = System.currentTimeMillis();
-            long endTime = startTime + flow.getTotalExecTimeInSec();
-
-            while (System.currentTimeMillis() < endTime){
-
-                try {
-                    for (Request request : flow.getRequest()){
-                        RequestToProducer requestToProducer = new RequestToProducer(request);
-                        requestToProducer.start();
-                        System.out.println("request - " + request.getId() + " - has been invoked");
-                        Thread.sleep(flow.getDelayBetweenEachRequestInMs());
-                    }
-                    System.out.println("flow - " + flow.getId() + " - has been executed");
-                    Thread.sleep(flow.getFrequencyInSec()*1000);
-                    
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+                @Override
+                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                    String message = new String(body, "UTF-8");
+                    FlowLauncher flowLauncher = new FlowLauncher();
+                    flowLauncher.launchFlows(message);
                 }
-                
-            }
+            };
+            String test = channel.basicConsume(queueName, true, consumer);
+            
 
+        } catch (TimeoutException ex) {
+            Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
+
+
+    
 }

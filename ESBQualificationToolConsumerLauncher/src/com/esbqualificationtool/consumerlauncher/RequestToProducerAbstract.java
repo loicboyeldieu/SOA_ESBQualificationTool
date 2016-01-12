@@ -3,7 +3,6 @@ package com.esbqualificationtool.consumerlauncher;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 

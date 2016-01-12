@@ -20,5 +20,10 @@
       <version>1.0.0</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>com.rabbitmq</groupId>
+      <artifactId>amqp-client</artifactId>
+      <version>3.6.0</version>
+    </dependency>
   </dependencies>
 </project>
