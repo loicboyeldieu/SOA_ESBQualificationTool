@@ -1,9 +1,13 @@
 package com.esbqualificationtool.controller;
 
+import com.esbqualificationtool.jaxbhandler.JAXBScenarioHandler;
+import com.esbqualificationtool.jaxbhandler.Scenario;
+import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class ESBQualificationToolController {
@@ -26,8 +30,8 @@ public class ESBQualificationToolController {
 
             String message = "<flow id=\"1\"> " +
                     "<consumer>consumer1</consumer>" +
-                    "<totalExecTimeInSec>30</totalExecTimeInSec>" +
-                    "<frequencyInSec>10</frequencyInSec>" +
+                    "<totalExecTimeInSec>10</totalExecTimeInSec>" +
+                    "<frequencyInSec>2</frequencyInSec>" +
                     "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
                     "<request id=\"1\">" +
                     "<producer>producer1</producer>" +
@@ -54,7 +58,15 @@ public class ESBQualificationToolController {
     }
 
     public void manageScenario(){
-        //JAXBScenarioHandler JAXBScenarioHandler = new JAXBScenarioHandler();
+        // Test if XLM is valid
+
+        JAXBScenarioHandler jaxbScenarioHandler = new JAXBScenarioHandler("/home/ubuntu/Programmation/SOA_ESB/SOA_ESBQualificationTool/ESBQualificationTool/src/main/java/com/esbqualificationtool/resources/ScenarioExample.xml");
+        Scenario scenario = jaxbScenarioHandler.getScenario();
+
+        for (int i = 0 ; i < scenario.getFlow().size(); i++){
+            String flowString = jaxbScenarioHandler.flowXMLStringFromIndex(scenario.getFlow(), i);
+        }
+
     }
 
 }

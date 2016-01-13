@@ -42,6 +42,16 @@ public class ConsumerLauncher {
                     String message = new String(body, "UTF-8");
                     FlowLauncher flowLauncher = new FlowLauncher();
                     flowLauncher.launchFlows(message);
+
+                   
+//                    try {
+//                        this.getChannel().close();
+//                        this.getChannel().getConnection().close();
+//
+//                    } catch (TimeoutException ex) {
+//                        Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+                    
                 }
             };
             String test = channel.basicConsume(queueName, true, consumer);

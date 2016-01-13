@@ -36,19 +36,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link QualificationToolService }
-     * 
-     */
-    public QualificationToolService createQualificationToolService() {
-        return new QualificationToolService();
-    }
-
-    /**
      * Create an instance of {@link QualificationToolServiceResponse }
      * 
      */
     public QualificationToolServiceResponse createQualificationToolServiceResponse() {
         return new QualificationToolServiceResponse();
+    }
+
+    /**
+     * Create an instance of {@link QualificationToolService }
+     * 
+     */
+    public QualificationToolService createQualificationToolService() {
+        return new QualificationToolService();
     }
 
     /**
