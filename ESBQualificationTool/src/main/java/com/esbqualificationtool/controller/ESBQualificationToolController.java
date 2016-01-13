@@ -22,34 +22,45 @@ public class ESBQualificationToolController {
 
     public void sendScenarioToQueue(){
         try {
+
+              JAXBScenarioHandler jaxbScenarioHandler = new JAXBScenarioHandler("src/main/java/com/esbqualificationtool/resources/ScenarioExample.xml");
+
+            Scenario scenario = jaxbScenarioHandler.getScenario();
+
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(HOST);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
 
-            String message = "<flow id=\"1\"> " +
-                    "<consumer>consumer1</consumer>" +
-                    "<totalExecTimeInSec>10</totalExecTimeInSec>" +
-                    "<frequencyInSec>2</frequencyInSec>" +
-                    "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
-                    "<request id=\"1\">" +
-                    "<producer>producer1</producer>" +
-                    "<messageSize>2</messageSize>" +
-                    "<processingTimeInMs>0</processingTimeInMs>" +
-                    "</request>" +
-                    "<request id=\"2\">" +
-                    "<producer>producer1</producer>" +
-                    "<messageSize>5</messageSize>" +
-                    "<processingTimeInMs>0</processingTimeInMs>" +
-                    "</request>" +
-                    "</flow>";
+//            String message = "<flow id=\"1\"> " +
+//                    "<consumer>consumer1</consumer>" +
+//                    "<totalExecTimeInSec>10</totalExecTimeInSec>" +
+//                    "<frequencyInSec>2</frequencyInSec>" +
+//                    "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
+//                    "<request id=\"1\">" +
+//                    "<producer>producer1</producer>" +
+//                    "<messageSize>2</messageSize>" +
+//                    "<processingTimeInMs>0</processingTimeInMs>" +
+//                    "</request>" +
+//                    "<request id=\"2\">" +
+//                    "<producer>producer1</producer>" +
+//                    "<messageSize>5</messageSize>" +
+//                    "<processingTimeInMs>0</processingTimeInMs>" +
+//                    "</request>" +
+//                    "</flow>";
+          
 
+        for (int i = 0 ; i < scenario.getFlow().size(); i++){
+            String flowString = jaxbScenarioHandler.flowXMLStringFromIndex(scenario.getFlow(), i);
 
-            channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
-            System.out.println(" [x] Sent '" + message + "'");
+            channel.basicPublish(EXCHANGE_NAME, "", null, flowString.getBytes());
+            System.out.println(" [x] Sent '" + flowString + "'");
+            }
+
             channel.close();
             connection.close();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (TimeoutException ex) {
@@ -57,16 +68,6 @@ public class ESBQualificationToolController {
         }
     }
 
-    public void manageScenario(){
-        // Test if XLM is valid
-
-        JAXBScenarioHandler jaxbScenarioHandler = new JAXBScenarioHandler("/home/ubuntu/Programmation/SOA_ESB/SOA_ESBQualificationTool/ESBQualificationTool/src/main/java/com/esbqualificationtool/resources/ScenarioExample.xml");
-        Scenario scenario = jaxbScenarioHandler.getScenario();
-
-        for (int i = 0 ; i < scenario.getFlow().size(); i++){
-            String flowString = jaxbScenarioHandler.flowXMLStringFromIndex(scenario.getFlow(), i);
-        }
-
-    }
+   
 
 }
