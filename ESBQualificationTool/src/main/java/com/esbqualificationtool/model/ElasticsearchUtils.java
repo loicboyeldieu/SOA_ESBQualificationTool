@@ -21,7 +21,7 @@ public class ElasticsearchUtils {
         JSONObject jsonObj = new JSONObject(jsonString);
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSZ");
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
         jsonObj.put("postDate", nowAsISO);
