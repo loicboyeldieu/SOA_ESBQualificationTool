@@ -21,6 +21,7 @@ public abstract class RequestToProducerAbstract extends Thread {
         this.success = 0;
     }
 
+    @Override
     public void run(){
         
         long startTime = System.currentTimeMillis();
@@ -31,8 +32,9 @@ public abstract class RequestToProducerAbstract extends Thread {
         this.RTT = (endTime - startTime) - request.getProcessingTimeInMs();
         this.success = 100;
 
-        // sendToQueue(resultToJSONString());
-        System.out.println(resultToJSONString());
+        SenderToResultQueue resultSender = new SenderToResultQueue();
+        resultSender.sendScenarioResultToResultQueue(resultToJSONString());
+       
     }
 
     public String resultToJSONString(){
