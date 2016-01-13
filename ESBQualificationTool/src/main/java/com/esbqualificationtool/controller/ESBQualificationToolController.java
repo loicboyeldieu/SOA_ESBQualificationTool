@@ -9,16 +9,17 @@ import java.util.concurrent.TimeoutException;
 public class ESBQualificationToolController {
 
     private static final String EXCHANGE_NAME = "consumer1";
+    private static final String HOST = "192.168.0.104";
 
     public void startApplication() {
         System.out.println("ApplicationStarted");
-        startQueue();
+        sendScenarioToQueue();
     }
 
-    public void startQueue(){
+    public void sendScenarioToQueue(){
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("192.168.0.104");
+            factory.setHost(HOST);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
@@ -51,4 +52,9 @@ public class ESBQualificationToolController {
             ex.printStackTrace();
         }
     }
+
+    public void manageScenario(){
+        //JAXBScenarioHandler JAXBScenarioHandler = new JAXBScenarioHandler();
+    }
+
 }

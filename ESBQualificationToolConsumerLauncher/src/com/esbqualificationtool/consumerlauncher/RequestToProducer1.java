@@ -1,13 +1,14 @@
 package com.esbqualificationtool.consumerlauncher;
 
+import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
 import esbqualificationtoolcompositeapp.ESBQualificationToolCompositeAppService1;
 import esbqualificationtoolcompositeapp.WebServiceProducer;
 
-public class RequestToProducer extends RequestToProducerAbstract {
+public class RequestToProducer1 extends RequestToProducerAbstract {
 
-    public RequestToProducer(Request request) {
-        super(request);
+    public RequestToProducer1(Request request, Flow flow) {
+        super(request, flow);
     }
 
     public byte[] callESBQualificationToolService(int messageSize, int processingTime) {

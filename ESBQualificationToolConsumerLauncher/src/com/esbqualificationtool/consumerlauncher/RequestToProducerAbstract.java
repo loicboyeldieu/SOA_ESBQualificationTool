@@ -1,5 +1,6 @@
 package com.esbqualificationtool.consumerlauncher;
 
+import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,11 +10,13 @@ import org.json.JSONObject;
 public abstract class RequestToProducerAbstract extends Thread {
 
     private Request request;
+    private Flow flow;
     private long RTT;
     private int success;
 
-    public RequestToProducerAbstract(Request request) {
+    public RequestToProducerAbstract(Request request, Flow flow) {
         this.request = request;
+        this.flow = flow;
         this.RTT = -1;
         this.success = 0;
     }
@@ -36,7 +39,12 @@ public abstract class RequestToProducerAbstract extends Thread {
         String result = null;
         try {
             JSONObject jsonRequestResult = new JSONObject(request);
-            jsonRequestResult.put("RTT", RTT);
+            if (success!=0){
+                jsonRequestResult.put("RTT", RTT);
+            }
+            jsonRequestResult.put("producer", request.getProducer().value());
+            jsonRequestResult.put("consumer",flow.getConsumer());
+            jsonRequestResult.put("flowId",flow.getId());
             jsonRequestResult.put("Success", success);
             result = jsonRequestResult.toString();
 

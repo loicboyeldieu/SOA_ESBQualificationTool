@@ -24,23 +24,15 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _QualificationToolServiceResponseReturn_QNAME = new QName("", "return");
     private final static QName _QualificationToolService_QNAME = new QName("http://webservices.esbqualificationtool.com/", "QualificationToolService");
     private final static QName _QualificationToolServiceResponse_QNAME = new QName("http://webservices.esbqualificationtool.com/", "QualificationToolServiceResponse");
+    private final static QName _QualificationToolServiceResponseReturn_QNAME = new QName("", "return");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.esbqualificationtool.webservices
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link QualificationToolServiceResponse }
-     * 
-     */
-    public QualificationToolServiceResponse createQualificationToolServiceResponse() {
-        return new QualificationToolServiceResponse();
     }
 
     /**
@@ -52,12 +44,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link byte[]}{@code >}}
+     * Create an instance of {@link QualificationToolServiceResponse }
      * 
      */
-    @XmlElementDecl(namespace = "", name = "return", scope = QualificationToolServiceResponse.class)
-    public JAXBElement<byte[]> createQualificationToolServiceResponseReturn(byte[] value) {
-        return new JAXBElement<byte[]>(_QualificationToolServiceResponseReturn_QNAME, byte[].class, QualificationToolServiceResponse.class, ((byte[]) value));
+    public QualificationToolServiceResponse createQualificationToolServiceResponse() {
+        return new QualificationToolServiceResponse();
     }
 
     /**
@@ -76,6 +67,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://webservices.esbqualificationtool.com/", name = "QualificationToolServiceResponse")
     public JAXBElement<QualificationToolServiceResponse> createQualificationToolServiceResponse(QualificationToolServiceResponse value) {
         return new JAXBElement<QualificationToolServiceResponse>(_QualificationToolServiceResponse_QNAME, QualificationToolServiceResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link byte[]}{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "", name = "return", scope = QualificationToolServiceResponse.class)
+    public JAXBElement<byte[]> createQualificationToolServiceResponseReturn(byte[] value) {
+        return new JAXBElement<byte[]>(_QualificationToolServiceResponseReturn_QNAME, byte[].class, QualificationToolServiceResponse.class, ((byte[]) value));
     }
 
 }

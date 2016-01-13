@@ -19,16 +19,16 @@ import java.util.logging.Logger;
 public class ConsumerLauncher {
 
     private static final String EXCHANGE_NAME = "consumer1";
+    private static final String HOST = "192.168.0.104";
 
     public static void main(String[] args) {
-
 
         try {
             System.out.println("Flow launching.");
             // and to the Producer we predifined for that launcher
             // and to the Producer we predifined for that launcher
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("192.168.0.104");
+            factory.setHost(HOST);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
@@ -53,8 +53,6 @@ public class ConsumerLauncher {
             Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
 
     
 }
