@@ -1,4 +1,4 @@
-package com.esbqualificationtool.consumerlauncher;
+package com.esbqualificationtool.requesttoproducer;
 
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
@@ -15,17 +15,19 @@ public class RequestToProducer1 extends RequestToProducerAbstract {
         byte[] message = null;
 
         try {
+
+            System.out.println("[RequestToProducer1] Ready to invoke webservice");
             // Call Web Service Operation
             ESBQualificationToolCompositeAppService1 service = new esbqualificationtoolcompositeapp.ESBQualificationToolCompositeAppService1();
             WebServiceProducer port = service.getCasaPort1();
 
             // process result here
             message = port.qualificationToolService(messageSize, processingTime);
-
+            System.out.println("[RequestToProducer1] Webservice response received");
 
         } catch (Exception ex) {
             // TODO handle custom exceptions here
-            System.out.println("Error: Service has not been invoked.");
+            System.out.println("[RequestToProducer1] Error: Service has not been invoked.");
         }
 
         return message;

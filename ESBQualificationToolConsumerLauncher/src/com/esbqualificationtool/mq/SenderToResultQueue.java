@@ -1,4 +1,4 @@
-package com.esbqualificationtool.consumerlauncher;
+package com.esbqualificationtool.mq;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -20,7 +20,7 @@ public class SenderToResultQueue {
             channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
 
             channel.basicPublish(EXCHANGE_NAME, "", null, result.getBytes());
-            System.out.println(" THREAD [x] Sent '" + result + " TO RESULT QUEUE'");
+            System.out.println("[SenderToResultQueue] Thread sent '" + result + " to result queue successfully.");
 
             channel.close();
             connection.close();

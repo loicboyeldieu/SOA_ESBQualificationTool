@@ -1,5 +1,7 @@
-package com.esbqualificationtool.consumerlauncher;
+package com.esbqualificationtool.mq;
 
+import com.esbqualificationtool.flowlauncher.FlowLauncher;
+import com.esbqualificationtool.consumerlauncher.*;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -14,27 +16,31 @@ import java.util.logging.Logger;
 
 public class ReceiverFromFlowQueue {
 
-    private static final String EXCHANGE_NAME = "consumer1";
-    private static final String HOST = "192.168.0.104";
+    private static final String FLOW_QUEUE_HOST = "192.168.0.104";
+    private String exchange_name ;
+
+    public ReceiverFromFlowQueue(String exchange_name) {
+        this.exchange_name = exchange_name ;
+    }
 
     public void receiveFlows() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost(HOST);
+            factory.setHost(FLOW_QUEUE_HOST);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+            channel.exchangeDeclare(exchange_name, "fanout");
             String queueName = channel.queueDeclare().getQueue();
-            channel.queueBind(queueName, EXCHANGE_NAME, "");
-            System.out.println(" FLOW QUEUE [*] Waiting for messages. To exit press CTRL+C");
+            channel.queueBind(queueName, exchange_name , "");
+            System.out.println(" [ReceiverFromFlowQueue] Waiting for messages. To exit press CTRL+C");
             Consumer consumer = new DefaultConsumer(channel) {
 
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                    System.out.println(" [ReceiverFromFlowQueue - Consumer] Message received from queue !");
                     String message = new String(body, "UTF-8");
                     FlowLauncher flowLauncher = new FlowLauncher();
                     flowLauncher.launchFlows(message);
-
                 }
             };
             channel.basicConsume(queueName, true, consumer);

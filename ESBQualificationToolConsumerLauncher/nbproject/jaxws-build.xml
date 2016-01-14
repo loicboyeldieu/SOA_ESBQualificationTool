@@ -28,5 +28,22 @@
         <delete dir="${build.generated.dir}/jax-wsCache/casaPort1"/>
         <delete dir="${build.generated.sources.dir}/jax-ws/esbqualificationtoolcompositeapp"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-casaPort1"/>
+    <target name="wsimport-client-casaPort1_1" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/casaPort1_1"/>
+        <property name="wsdl-casaPort1_1" location="xml-resources/web-service-references/casaPort1_1/wsdl/192.168.0.100_9080/ESBQualificationToolCompositeApp2Service1/casaPort1.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/casaPort1_1" destdir="${build.generated.dir}/jax-wsCache/casaPort1_1" wsdl="${wsdl-casaPort1_1}" catalog="catalog.xml" extension="true" verbose="true" wsdlLocation="http://192.168.0.100:9080/ESBQualificationToolCompositeApp2Service1/casaPort1?wsdl" xnocompile="true">
+            <depends file="${wsdl-casaPort1_1}"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/casaPort1_1"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/casaPort1_1">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-casaPort1_1" depends="-init-project">
+        <delete dir="${build.generated.dir}/jax-wsCache/casaPort1_1"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/esbqualificationtoolcompositeapp2"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-casaPort1, wsimport-client-casaPort1_1"/>
 </project>

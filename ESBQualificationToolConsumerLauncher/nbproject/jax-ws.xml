@@ -26,6 +26,30 @@
         </wsimport-option>
       </wsimport-options>
     </client>
+    <client name="casaPort1_1">
+      <wsdl-url>http://192.168.0.100:9080/ESBQualificationToolCompositeApp2Service1/casaPort1?wsdl</wsdl-url>
+      <local-wsdl-file>192.168.0.100_9080/ESBQualificationToolCompositeApp2Service1/casaPort1.wsdl</local-wsdl-file>
+      <package-name>esbqualificationtoolcompositeapp2</package-name>
+      <catalog-file>catalog.xml</catalog-file>
+      <wsimport-options>
+        <wsimport-option>
+          <wsimport-option-name>extension</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>verbose</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>wsdlLocation</wsimport-option-name>
+          <wsimport-option-value>http://192.168.0.100:9080/ESBQualificationToolCompositeApp2Service1/casaPort1?wsdl</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>xnocompile</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+      </wsimport-options>
+    </client>
   </clients>
   <jsr109>false</jsr109>
 </jax-ws>

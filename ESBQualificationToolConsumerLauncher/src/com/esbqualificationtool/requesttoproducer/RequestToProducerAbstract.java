@@ -1,5 +1,7 @@
-package com.esbqualificationtool.consumerlauncher;
+package com.esbqualificationtool.requesttoproducer;
 
+import com.esbqualificationtool.mq.SenderToResultQueue;
+import com.esbqualificationtool.consumerlauncher.*;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
 import java.util.logging.Level;
@@ -22,31 +24,34 @@ public abstract class RequestToProducerAbstract extends Thread {
     }
 
     @Override
-    public void run(){
-        
+    public void run() {
+
+        System.out.println(" [RequestToProducer] Thread started");
+
         long startTime = System.currentTimeMillis();
         callESBQualificationToolService(request.getMessageSize(), request.getProcessingTimeInMs());
         long endTime = System.currentTimeMillis();
-        
+
         //Send results to the queue before the thread is over
         this.RTT = (endTime - startTime) - request.getProcessingTimeInMs();
         this.success = 100;
 
         SenderToResultQueue resultSender = new SenderToResultQueue();
         resultSender.sendScenarioResultToResultQueue(resultToJSONString());
-       
+
+        System.out.println(" [RequestToProducer] Thread ended");
     }
 
-    public String resultToJSONString(){
+    public String resultToJSONString() {
         String result = null;
         try {
             JSONObject jsonRequestResult = new JSONObject(request);
-            if (success!=0){
+            if (success != 0) {
                 jsonRequestResult.put("RTT", RTT);
             }
             jsonRequestResult.put("producer", request.getProducer().value());
-            jsonRequestResult.put("consumer",flow.getConsumer());
-            jsonRequestResult.put("flowId",flow.getId());
+            jsonRequestResult.put("consumer", flow.getConsumer());
+            jsonRequestResult.put("flowId", flow.getId());
             jsonRequestResult.put("Success", success);
             result = jsonRequestResult.toString();
 
@@ -57,5 +62,4 @@ public abstract class RequestToProducerAbstract extends Thread {
     }
 
     public abstract byte[] callESBQualificationToolService(int messageSize, int processingTime);
-
 }
