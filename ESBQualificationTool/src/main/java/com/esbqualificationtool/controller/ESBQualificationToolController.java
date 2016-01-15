@@ -22,10 +22,10 @@ public class ESBQualificationToolController {
 
         for (int i = 0; i < scenario.getFlow().size(); i++) {
             Flow flow = (Flow) scenario.getFlow().get(i);
-            String flowString = jaxbScenarioHandler.flowXMLStringFromIndex(scenario.getFlow(), i);
-            String consumer = flow.getConsumer();
+            String flowString = jaxbScenarioHandler.getFlowXMLStringFromFlowObject(flow) ; 
 
-            SenderToFlowQueue queueSender = new SenderToFlowQueue(consumer);
+            ConsumerType consumer = flow.getConsumer();
+            SenderToFlowQueue queueSender = new SenderToFlowQueue(consumer.value());
             queueSender.sendFlowStringToQueue(flowString);
             System.out.println("[Controller] Sent one flow to queue");
         }

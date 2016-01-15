@@ -31,6 +31,7 @@ public abstract class RequestToProducerAbstract extends Thread {
         long startTime = System.currentTimeMillis();
         callESBQualificationToolService(request.getMessageSize(), request.getProcessingTimeInMs());
         long endTime = System.currentTimeMillis();
+        System.out.println(" [RequestToProducer] Response received");
 
         //Send results to the queue before the thread is over
         this.RTT = (endTime - startTime) - request.getProcessingTimeInMs();

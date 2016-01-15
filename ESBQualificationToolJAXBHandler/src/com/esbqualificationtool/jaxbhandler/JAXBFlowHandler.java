@@ -57,29 +57,29 @@ public class JAXBFlowHandler {
         return flowGenerated;
     }
 
-    public static void main(String[] args) throws JAXBException, XMLStreamException, IOException, SAXException, ParserConfigurationException {
-
-        String test = "<flow id=\"1\"> " +
-                "<consumer>consumer1</consumer>" +
-                "<totalExecTimeInSec>60</totalExecTimeInSec>" +
-                "<frequencyInSec>5</frequencyInSec>" +
-                "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
-                "<request id=\"1\">" +
-                "<producer>producer1</producer>" +
-                "<messageSize>512</messageSize>" +
-                "<processingTimeInMs>2000</processingTimeInMs>" +
-                "</request>" +
-                "<request id=\"2\">" +
-                "<producer>producer1</producer>" +
-                "<messageSize>256</messageSize>" +
-                "<processingTimeInMs>5000</processingTimeInMs>" +
-                "</request>" +
-                "</flow>";
-
-        JAXBFlowHandler jaxbFlowHandler = new JAXBFlowHandler(test);
-        Flow flowtest = jaxbFlowHandler.getFlow();
-        System.out.println(flowtest.getRequest().get(1).getProcessingTimeInMs());
-
-    }
+//    public static void main(String[] args) throws JAXBException, XMLStreamException, IOException, SAXException, ParserConfigurationException {
+//
+//        String test = "<flow id=\"1\"> " +
+//                "<consumer>consumer1</consumer>" +
+//                "<totalExecTimeInSec>60</totalExecTimeInSec>" +
+//                "<frequencyInSec>5</frequencyInSec>" +
+//                "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
+//                "<request id=\"1\">" +
+//                "<producer>producer1</producer>" +
+//                "<messageSize>512</messageSize>" +
+//                "<processingTimeInMs>2000</processingTimeInMs>" +
+//                "</request>" +
+//                "<request id=\"2\">" +
+//                "<producer>producer1</producer>" +
+//                "<messageSize>256</messageSize>" +
+//                "<processingTimeInMs>5000</processingTimeInMs>" +
+//                "</request>" +
+//                "</flow>";
+//
+//        JAXBFlowHandler jaxbFlowHandler = new JAXBFlowHandler(test);
+//        Flow flowtest = jaxbFlowHandler.getFlow();
+//        System.out.println(flowtest.getRequest().get(1).getProcessingTimeInMs());
+//
+//    }
 }
 

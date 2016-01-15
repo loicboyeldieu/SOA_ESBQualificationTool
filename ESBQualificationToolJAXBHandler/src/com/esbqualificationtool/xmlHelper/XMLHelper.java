@@ -20,6 +20,9 @@ import org.xml.sax.SAXException;
 
 public class XMLHelper {
 
+    public static String xsdUrl = "src/com/esbqualificationtool/xmlHelper/ScenarioSchema.xsd" ;
+
+
     public static boolean isXMLWellFormed(String xmlUrl) throws IOException, SAXException, ParserConfigurationException {
 
         boolean isXMLValid = false;
@@ -34,7 +37,7 @@ public class XMLHelper {
         return isXMLValid;
     }
 
-    public static boolean doesXMLMatchXSD(String xmlUrl, String xsdUrl) throws SAXException, FileNotFoundException, IOException {
+    public static boolean doesXMLMatchXSD(String xmlUrl) throws SAXException, FileNotFoundException, IOException {
 
         boolean doesMatchXSD = false;
 
@@ -48,12 +51,11 @@ public class XMLHelper {
         return doesMatchXSD;
     }
 
-    public static void main(String[] args) throws JAXBException, XMLStreamException, IOException, SAXException, ParserConfigurationException {
-
-        String xmlUrl = "/home/ubuntu/Desktop/ScenarioExample.xml";
-        String xsdUrl = "/home/ubuntu/Desktop/ScenarioSchema.xsd";
-
-        System.out.println(XMLHelper.isXMLWellFormed(xmlUrl));
-        System.out.println(XMLHelper.doesXMLMatchXSD(xmlUrl, xsdUrl));
-    }
+//    public static void main(String[] args) throws JAXBException, XMLStreamException, IOException, SAXException, ParserConfigurationException {
+//
+//        String xmlUrl = "src/com/esbqualificationtool/xmlHelper/ScenarioExample.xml";
+//
+//        System.out.println(XMLHelper.isXMLWellFormed(xmlUrl));
+//        System.out.println(XMLHelper.doesXMLMatchXSD(xmlUrl));
+//    }
 }

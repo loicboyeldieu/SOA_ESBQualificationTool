@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="ScenarioSchema.xsd">
-    <name>Scenario Test Antho</name>
+    <name>Scenario Loic</name>
     <flow id="1">
         <consumer>consumer1</consumer>
         <startTimeInMs>5</startTimeInMs>

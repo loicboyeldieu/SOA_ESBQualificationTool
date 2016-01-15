@@ -15,22 +15,7 @@ public class SenderToFlowQueue {
         this.exchange_name = exchange_name;
     }
 
-//  private static final String xmlTest = "<flow id=\"1\"> " +
-//                    "<consumer>consumer1</consumer>" +
-//                    "<totalExecTimeInSec>10</totalExecTimeInSec>" +
-//                    "<frequencyInSec>2</frequencyInSec>" +
-//                    "<delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>" +
-//                    "<request id=\"1\">" +
-//                    "<producer>producer1</producer>" +
-//                    "<messageSize>2</messageSize>" +
-//                    "<processingTimeInMs>0</processingTimeInMs>" +
-//                    "</request>" +
-//                    "<request id=\"2\">" +
-//                    "<producer>producer1</producer>" +
-//                    "<messageSize>5</messageSize>" +
-//                    "<processingTimeInMs>0</processingTimeInMs>" +
-//                    "</request>" +
-//                    "</flow>";
+   
     public void sendFlowStringToQueue(String flowString) {
         try {
 

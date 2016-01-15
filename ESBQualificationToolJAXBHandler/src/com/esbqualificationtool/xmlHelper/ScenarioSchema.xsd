@@ -7,7 +7,8 @@
                 <xs:element name="flow" maxOccurs="unbounded" minOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element type="xs:string" name="consumer"/>
+                            <xs:element type="consumerType" name="consumer"/>
+                            <xs:element type="startTimeInMsType" name="startTimeInMs"/>
                             <xs:element type="totalExecTimeInSecType" name="totalExecTimeInSec"/>
                             <xs:element type="frequencyInSecType" name="frequencyInSec"/>
                             <xs:element type="delayBetweenEachRequestInMsType" name="delayBetweenEachRequestInMs"/>
@@ -39,11 +40,22 @@
     <xs:simpleType name="producerType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="producer1"/>
+            <xs:enumeration value="producer2"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="consumerType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="consumer1"/>
+            <xs:enumeration value="consumer2"/>
+            <xs:enumeration value="consumer3"/>
+            <xs:enumeration value="consumer4"/>
+            <xs:enumeration value="consumer5"/>
+        </xs:restriction>
+    </xs:simpleType>
+        <xs:simpleType name="startTimeInMsType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="3600000"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="frequencyInSecType">
@@ -67,7 +79,7 @@
     <xs:simpleType name="messageSizeType">
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="1"/>
-            <xs:maxInclusive value="1000000"/>
+            <xs:maxInclusive value="10000"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="processingTimeInMsType">

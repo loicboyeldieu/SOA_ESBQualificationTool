@@ -54,56 +54,33 @@ public class JAXBScenarioHandler {
         return scenario;
     }
 
-    public String flowXMLStringFromIndex(List<Flow> flows, int index) {
+    public String getFlowXMLStringFromFlowObject(Flow flow) {
         StringWriter flowString = new StringWriter();
-        if (index < flows.size()) {
-            try {
-                Flow flow = flows.get(index);
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(new JAXBElement(new QName("", "flow"), Flow.class, flow), flowString);
-                return flowString.toString();
-            } catch (JAXBException ex) {
-                Logger.getLogger(JAXBScenarioHandler.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
 
-    static public Flow UnmarshalFlowStringToFlowObject(String flowString) {
         try {
-            // (Consumer side) : flowString is received
-            XMLInputFactory xif = XMLInputFactory.newInstance();
-            XMLStreamReader xsr = (XMLStreamReader) xif.createXMLStreamReader(new StringReader(flowString.toString()));
-
-            JAXBContext jc2 = JAXBContext.newInstance(Flow.class);
-            // marshaller = jc.createMarshaller();
-            Unmarshaller unmarshaller2 = jc2.createUnmarshaller();
-
-            JAXBElement<Flow> flowJAXB = unmarshaller2.unmarshal(xsr, Flow.class);
-            return flowJAXB.getValue();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(new JAXBElement(new QName("", "flow"), Flow.class, flow), flowString);
+            return flowString.toString();
         } catch (JAXBException ex) {
             Logger.getLogger(JAXBScenarioHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;
-        } catch (XMLStreamException ex) {
-            Logger.getLogger(JAXBScenarioHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
 
     }
 
-    public static void main(String[] args) throws JAXBException, XMLStreamException, IOException, SAXException, ParserConfigurationException {
-
-        String xmlUrl = "/home/ubuntu/Desktop/ScenarioExample.xml";
-
-        JAXBScenarioHandler jaxbhandler = new JAXBScenarioHandler(xmlUrl);
-        Scenario s = jaxbhandler.getScenario();
-
-        // The different flows to xml string
-        for (int i = 0; i < s.getFlow().size(); i++) {
-            String flowString = jaxbhandler.flowXMLStringFromIndex(s.getFlow(), i);
-            System.out.println(flowString);
-        }
-    }
+//    public static void main(String[] args) throws JAXBException, XMLStreamException, IOException, SAXException, ParserConfigurationException {
+//
+//        String xmlUrl = "src/com/esbqualificationtool/xmlHelper/ScenarioExample.xml";
+//
+//        JAXBScenarioHandler jaxbhandler = new JAXBScenarioHandler(xmlUrl);
+//        Scenario s = jaxbhandler.getScenario();
+//
+//        // The different flows to xml string
+//        for (Flow flow : s.getFlow()) {
+//            String flowString = jaxbhandler.getFlowXMLStringFromFlowObject(flow);
+//            System.out.println(flowString);
+//            System.out.println("");
+//            System.out.println("Next flow : ");
+//        }
+//    }
 }
