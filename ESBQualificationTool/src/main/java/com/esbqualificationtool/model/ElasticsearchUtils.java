@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class ElasticsearchUtils {
 
     private static final String ES_HOST = "192.168.0.103";
-    private static final String INDEX = "prototype";
+    private static final String INDEX = "loictest";
 
     public static void indexToES(String jsonString, String scenarioName) {
 

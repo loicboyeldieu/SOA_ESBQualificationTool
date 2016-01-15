@@ -5,6 +5,7 @@ import com.esbqualificationtool.jaxbhandler.*;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.mq.ReceiverFromResultQueue;
 import com.esbqualificationtool.mq.SenderToFlowQueue;
+import com.esbqualificationtool.view.UserBehaviour;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -28,6 +29,9 @@ public class ESBQualificationToolController {
             queueSender.sendFlowStringToQueue(flowString);
             System.out.println("[Controller] Sent one flow to queue");
         }
+
+        UserBehaviour user = new UserBehaviour(5);
+        user.start();
 
         ReceiverFromResultQueue receiverFromResultQueue = new ReceiverFromResultQueue(scenario);
         System.out.println("[Controller] Ready to receive results") ;

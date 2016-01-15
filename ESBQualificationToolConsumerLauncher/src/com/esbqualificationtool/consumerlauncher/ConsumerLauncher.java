@@ -4,13 +4,13 @@ import com.esbqualificationtool.mq.ReceiverFromFlowQueue;
 
 public class ConsumerLauncher {
 
-    private static String ConsumerName;
+    
 
     public static void main(String[] args) {
 
-        if (!(args.length < 1)) {
+        if (!(args.length < 0)) {
 
-            ConsumerName = args[0] ;
+            String ConsumerName = "consumer1" ;
             ReceiverFromFlowQueue receiver = new ReceiverFromFlowQueue(ConsumerName);
             System.out.println(" [Consumer Launcher] Consumer launcher is starting...");
             System.out.println(" [Consumer Launcher] Ready to receive flows.");

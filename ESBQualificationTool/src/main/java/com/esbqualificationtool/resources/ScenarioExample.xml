@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="ScenarioSchema.xsd">
-    <name>Scenario Test</name>
+    <name>Scenario Loic</name>
     <flow id="1">
         <consumer>consumer1</consumer>
         <totalExecTimeInSec>60</totalExecTimeInSec>
-        <frequencyInSec>5</frequencyInSec>
+        <frequencyInSec>10</frequencyInSec>
         <delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>
         <request id="1">
             <producer>producer1</producer>
-            <messageSize>512</messageSize>
-            <processingTimeInMs>2000</processingTimeInMs>
-        </request>
-        <request id="2">
-            <producer>producer1</producer>
             <messageSize>256</messageSize>
-            <processingTimeInMs>5000</processingTimeInMs>
+            <processingTimeInMs>0</processingTimeInMs>
         </request>
     </flow>
-    <flow id="2">
-        <consumer>consumer1</consumer>
-        <totalExecTimeInSec>120</totalExecTimeInSec>
-        <frequencyInSec>10</frequencyInSec>
-        <delayBetweenEachRequestInMs>5</delayBetweenEachRequestInMs>
-        <request id="1">
-            <producer>producer1</producer>
-            <messageSize>1024</messageSize>
-            <processingTimeInMs>50</processingTimeInMs>
-        </request>
-        <request id="2">
-            <producer>producer1</producer>
-            <messageSize>256</messageSize>
-            <processingTimeInMs>5000</processingTimeInMs>
-        </request>
-    </flow>
+
 </scenario>

@@ -12,21 +12,28 @@ import com.rabbitmq.client.Envelope;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+// This class should be a singleton
+// There can be only one ResultQueue created.
 public class ReceiverFromResultQueue {
 
-    private static final  String EXCHANGE_NAME = "requestResult";
-    private static final  String END_SCENARIO_RESULTS = "end scenario";
-    private static final String QUEUE_HOST = "192.168.0.104";
+    private static final String EXCHANGE_NAME = "requestResult";
+    private static final String END_FLOW_RESULTS = "FLOW_END";
+    private static final String SCENARIO_ABORTED = "SCENARIO_ABORTED";
 
-    private Scenario scenario ;
+    private static final String QUEUE_HOST = "192.168.0.104";
+    private Scenario scenario;
+    private int endFlowMessagesReceived;
 
     public ReceiverFromResultQueue(Scenario scenario) {
-        this.scenario = scenario ; 
+        this.scenario = scenario;
+        this.endFlowMessagesReceived = 0;
     }
 
     public void receiveAllRequestResultsFromExecution() throws IOException, TimeoutException {
 
         // file temp init
+
+        final int flows = scenario.getFlow().size();
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(QUEUE_HOST);
@@ -41,25 +48,28 @@ public class ReceiverFromResultQueue {
             //@Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 String resultString = new String(body, "UTF-8");
-System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] One Result received ! ");
-                if (resultString.equals(END_SCENARIO_RESULTS)) {
-                    System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] End message - Go to close ");
-                    try {
-                        this.getChannel().close();
-                        this.getChannel().getConnection().close();
-                    } catch (TimeoutException ex) {
-                        ex.printStackTrace();
+                System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] One Result received ! ");
+                if (resultString.equals(END_FLOW_RESULTS)) {
+                    endFlowMessagesReceived++;
+                    System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] End message received");
+                    if (endFlowMessagesReceived == flows) {
+                        System.out.println("Scenario's end has been reached");
+                        System.exit(0);
                     }
                 }
+                else if (resultString.equals(SCENARIO_ABORTED)){
+                    System.out.println("User has decided to stop application");
+                    System.exit(0);
+                }
                 else {
-                    System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready to index "+ resultString);
- 
+                    System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready to index " + resultString);
+
                     // file temp handler 
                     ElasticsearchUtils.indexToES(resultString, scenario.getName());
                 }
             }
         };
-       channel.basicConsume(queueName, true, consumer);
+        channel.basicConsume(queueName, true, consumer);
 
     }
 }
