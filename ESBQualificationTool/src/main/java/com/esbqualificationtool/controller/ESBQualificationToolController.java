@@ -30,8 +30,8 @@ public class ESBQualificationToolController {
             System.out.println("[Controller] Sent one flow to queue");
         }
 
-        UserBehaviour user = new UserBehaviour(5);
-        user.start();
+        //UserBehaviour user = new UserBehaviour(5);
+        //user.start();
 
         ReceiverFromResultQueue receiverFromResultQueue = new ReceiverFromResultQueue(scenario);
         System.out.println("[Controller] Ready to receive results") ;

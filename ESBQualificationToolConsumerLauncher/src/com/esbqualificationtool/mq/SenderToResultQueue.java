@@ -11,7 +11,7 @@ public class SenderToResultQueue {
     public static final String EXCHANGE_NAME = "requestResult";
     public static final String RESULT_QUEUE_HOST = "192.168.0.104";
 
-    public void sendScenarioResultToResultQueue(String result) {
+    public void sendToResultQueue(String result) {
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(RESULT_QUEUE_HOST);

@@ -6,6 +6,7 @@ import com.esbqualificationtool.jaxbhandler.JAXBFlowHandler;
 import com.esbqualificationtool.jaxbhandler.ProducerType;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow.Request;
+import com.esbqualificationtool.mq.SenderToResultQueue;
 import com.esbqualificationtool.requesttoproducer.RequestToProducer2;
 import com.esbqualificationtool.requesttoproducer.RequestToProducerAbstract;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ public class FlowLauncher {
 
     public static final String P1 = ProducerType.PRODUCER_1.value() ;
     public static final String P2 = "producer2" ;
+    
+    private static final String END_FLOW_RESULTS = "FLOW_END";
+
+    public static final int TIME_IN_SEC_TO_WAIT_BEFORE_END = 1 ;
 
     private ArrayList requestToProducerList = new ArrayList();
 
@@ -53,6 +58,17 @@ public class FlowLauncher {
                 Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        // here the total time execution has been reached, we kill all pending thread 
+        // and send END_FLOW to queue (for the application)
+        try {
+            Thread.sleep(TIME_IN_SEC_TO_WAIT_BEFORE_END * 1000);
+            stopFlows() ;
+            SenderToResultQueue endSender = new SenderToResultQueue() ;
+            endSender.sendToResultQueue(END_FLOW_RESULTS);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FlowLauncher.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void stopFlows(){
@@ -60,7 +76,13 @@ public class FlowLauncher {
         for (int i=0; i<requestToProducers; i++){
             RequestToProducerAbstract requestObject = (RequestToProducerAbstract) requestToProducerList.get(i);
             if (requestObject.isAlive()){
+
+                String requestFailedResult = requestObject.resultToJSONString()  ;
                 requestObject.destroy();
+
+                SenderToResultQueue resultFailSender = new SenderToResultQueue();
+                resultFailSender.sendToResultQueue(requestFailedResult);
+                
             }
         }
     }

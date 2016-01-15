@@ -50,7 +50,7 @@ public class ReceiverFromFlowQueue {
                             FlowLauncher flowLauncher = (FlowLauncher) flowLauncherList.get(i);
                             flowLauncher.stopFlows();
                             SenderToResultQueue sender = new SenderToResultQueue();
-                            sender.sendScenarioResultToResultQueue(SCENARIO_ABORTED);
+                            sender.sendToResultQueue(SCENARIO_ABORTED);
                         }
                     } else {
                         FlowLauncher flowLauncher = new FlowLauncher();

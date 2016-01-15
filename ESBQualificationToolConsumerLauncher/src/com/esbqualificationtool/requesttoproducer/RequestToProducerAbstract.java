@@ -37,7 +37,7 @@ public abstract class RequestToProducerAbstract extends Thread {
         this.success = 100;
 
         SenderToResultQueue resultSender = new SenderToResultQueue();
-        resultSender.sendScenarioResultToResultQueue(resultToJSONString());
+        resultSender.sendToResultQueue(resultToJSONString());
 
         System.out.println(" [RequestToProducer] Thread ended");
     }
