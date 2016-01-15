@@ -1,19 +1,25 @@
 package com.esbqualificationtool.view;
 
-import java.util.List;
+import java.awt.HeadlessException;
+import javax.swing.DefaultListModel;
 import javax.swing.text.View;
 
 public class MainFrameJFrame extends javax.swing.JFrame {
 
-    List scenarios ;
-    List results ;
-    View  view ;
-    String xmlUrl ;
+    private DefaultListModel scenarios ;
+    private DefaultListModel results ;
+    private ESBQualificationToolView  view ;
+    private String xmlUrl ;
 
-    /** Creates new form MainFrameJFrame */
-    public MainFrameJFrame() {
+    public MainFrameJFrame(DefaultListModel scenarios, DefaultListModel results, ESBQualificationToolView view) throws HeadlessException {
+        this.scenarios = scenarios;
+        this.results = results;
+        this.view = view;
+        this.xmlUrl = "";
+
         initComponents();
     }
+
 
     /** This method is called from within the constructor to
      * initialize the form.

@@ -1,14 +1,41 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.esbqualificationtool.model;
 
-/**
- *
- * @author root
- */
+
 public class ScenarioResult {
+
+    private String scenarioName ;
+    private String fileResultsUrl ;
+
+    public ScenarioResult(String scenarioName) {
+        this.scenarioName = scenarioName;
+        this.fileResultsUrl = scenarioName + "-results.txt" ;
+    }
+
+    public String getKibanaLink() {
+        return "" + scenarioName + "" ;
+    }
+
+    public String getFileResultsUrl() {
+        return fileResultsUrl;
+    }
+
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    public void setFileResultsUrl(String fileResultsUrl) {
+        this.fileResultsUrl = fileResultsUrl;
+    }
+
+    public void setScenarioName(String scenarioName) {
+        this.scenarioName = scenarioName;
+    }
+
+
+
+
+
+
+
 
 }

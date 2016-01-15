@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="ScenarioSchema.xsd">
+    <name>Scenario Loic</name>
+    <flow id="1">
+        <consumer>consumer1</consumer>
+        <startTimeInMs>5</startTimeInMs>
+        <totalExecTimeInSec>30</totalExecTimeInSec>
+        <frequencyInSec>10</frequencyInSec>
+        <delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>
+        <request id="1">
+            <producer>producer1</producer>
+            <messageSize>256</messageSize>
+            <processingTimeInMs>30</processingTimeInMs>
+        </request>
+                <request id="2">
+            <producer>producer1</producer>
+            <messageSize>128</messageSize>
+            <processingTimeInMs>10</processingTimeInMs>
+        </request>
+                <request id="3">
+            <producer>producer1</producer>
+            <messageSize>56</messageSize>
+            <processingTimeInMs>20</processingTimeInMs>
+        </request>
+    </flow>
+        <flow id="2">
+        <consumer>consumer1</consumer>
+        <startTimeInMs>5</startTimeInMs>
+        <totalExecTimeInSec>30</totalExecTimeInSec>
+        <frequencyInSec>10</frequencyInSec>
+        <delayBetweenEachRequestInMs>0</delayBetweenEachRequestInMs>
+        <request id="1">
+            <producer>producer2</producer>
+            <messageSize>256</messageSize>
+            <processingTimeInMs>30</processingTimeInMs>
+        </request>
+                <request id="2">
+            <producer>producer2</producer>
+            <messageSize>128</messageSize>
+            <processingTimeInMs>10</processingTimeInMs>
+        </request>
+                <request id="3">
+            <producer>producer2</producer>
+            <messageSize>56</messageSize>
+            <processingTimeInMs>20</processingTimeInMs>
+        </request>
+    </flow>
+</scenario>
