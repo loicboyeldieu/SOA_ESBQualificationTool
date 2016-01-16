@@ -27,13 +27,27 @@ public class ReceiverFromResultQueue extends Thread {
     private int endFlowMessagesReceived;
     private ESBQualificationToolController controller;
     private boolean needToBeTerminated;
+    private Connection connection ;
+    private Channel channel ;
+
 
     public ReceiverFromResultQueue(Scenario scenario, ESBQualificationToolController controller) {
         this.scenario = scenario;
         this.endFlowMessagesReceived = 0;
         this.controller = controller;
         this.needToBeTerminated = false;
+        connection = null ;
+        channel = null ;
     }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
 
     public boolean isNeedToBeTerminated() {
         return needToBeTerminated;
@@ -50,8 +64,8 @@ public class ReceiverFromResultQueue extends Thread {
             final int flows = scenario.getFlow().size();
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(QUEUE_HOST);
-            Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel();
+            connection = factory.newConnection();
+            channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
             String queueName = channel.queueDeclare().getQueue();
             channel.queueBind(queueName, EXCHANGE_NAME, "");

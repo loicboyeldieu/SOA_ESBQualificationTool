@@ -5,10 +5,17 @@ import javax.swing.JOptionPane;
 
 public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
 
+    private ESBQualificationToolView view;
 
+//    public static void main(String[] args){
+//        ScenarioLaunchingJFrame s = new ScenarioLaunchingJFrame(null);
+//        s.setVisible(true);
+//        while(true) {}
+//    }
 
     /** Creates new form ScenarioLaunchingForm */
-    public ScenarioLaunchingJFrame() {
+    public ScenarioLaunchingJFrame(ESBQualificationToolView view) {
+        this.view = view;
         initComponents();
     }
 
@@ -20,55 +27,74 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        stopjButton = new javax.swing.JButton();
+        jButtonStop = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButtonStart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Scenario is launching...");
         setAlwaysOnTop(true);
 
-        stopjButton.setText("Stop Scenario Launching");
-        stopjButton.addActionListener(new java.awt.event.ActionListener() {
+        jButtonStop.setText("Stop");
+        jButtonStop.setEnabled(false);
+        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stopjButtonActionPerformed(evt);
+                jButtonStopActionPerformed(evt);
             }
         });
 
         jLabel1.setText("Scenario is launching ...");
 
+        jButtonStart.setText("Start");
+        jButtonStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStartActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(87, 87, 87)
-                .addComponent(stopjButton)
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addGap(36, 36, 36))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(85, Short.MAX_VALUE)
+                .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51)
+                .addComponent(jButtonStop, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(69, 69, 69))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(stopjButton)
-                .addContainerGap())
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonStop, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void stopjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopjButtonActionPerformed
+    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
+       resetJButtonEnable();
+       this.setVisible(false);
+       view.getMainFrameJFrame().setVisible(true);
+        view.informControllerToStopScenarioExecution();
         
-        // code to be changed
-        JOptionPane.showMessageDialog(null, "stop", "stop clicked", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jButtonStopActionPerformed
 
-
-    }//GEN-LAST:event_stopjButtonActionPerformed
+    private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
+        view.informControllerToStartScenarioExecution();
+        jButtonStop.setEnabled(true);
+        jButtonStart.setEnabled(false);
+    }//GEN-LAST:event_jButtonStartActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -80,8 +106,9 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
 //        });
 //    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonStart;
+    private javax.swing.JButton jButtonStop;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JButton stopjButton;
     // End of variables declaration//GEN-END:variables
 
     public JLabel getjLabel1() {
@@ -90,5 +117,10 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
 
     public void setMessageText(String msg) {
         this.getjLabel1().setText(msg);
+    }
+
+    public void resetJButtonEnable() {
+        jButtonStart.setEnabled(true);
+        jButtonStop.setEnabled(false);
     }
 }

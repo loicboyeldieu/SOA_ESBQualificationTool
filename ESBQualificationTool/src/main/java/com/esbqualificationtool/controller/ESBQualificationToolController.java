@@ -14,7 +14,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import org.apache.lucene.util.IOUtils;
 
-public class ESBQualificationToolController {
+public class ESBQualificationToolController extends Thread {
 
     private JAXBScenarioHandler jaxbScenarioHandler;
     private ESBQualificationToolView view;
@@ -66,7 +66,15 @@ public class ESBQualificationToolController {
         }
     }
 
+    public void deleteScenario(Scenario scenario) {
+        String scenarioDeletedName = scenario.getName() ;
+        scenarios.removeElement(scenario);
+        System.out.println("[Controller] "+ scenarioDeletedName + " scenario is deleted");
+    }
+
     public void launchScenario(Scenario scenario) {
+
+       informViewScenarioIsLaunching();
 
         System.out.println("[Controller] launchScenario method called");
         selectedScenario = scenario ; 
@@ -83,11 +91,12 @@ public class ESBQualificationToolController {
         System.out.println("[Controller] All the flows have been sent to queue");
     }
 
-    public void startScenarioExecution() {
+    public void run() {
+        startScenarioExecution() ; 
+    }
 
-        // loic's code here
-
-        informViewScenarioIsLaunching();
+    private void  startScenarioExecution() {
+    System.out.println("[Controller] startScenarioExecution method called");
 
         ReceiverFromResultQueue receiverFromResultQueue = new ReceiverFromResultQueue(selectedScenario, this);
         System.out.println("[Controller] Ready to receive results");
@@ -101,12 +110,21 @@ public class ESBQualificationToolController {
         while(receiverFromResultQueue.isNeedToBeTerminated() == false) {
             
         }
+        
+        try {
+            receiverFromResultQueue.getChannel().close();
+            receiverFromResultQueue.getConnection().close();
+        } catch (IOException ex) {
+            view.displayPopUp("Error IO closing queue", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+        } catch (TimeoutException ex) {
+            view.displayPopUp("Error Timeout closing queue", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
 
        receiverFromResultQueue.stop() ;
 
         ScenarioResult sr = new ScenarioResult(selectedScenario.getName());
         File input = new File(ReceiverFromResultQueue.FILE_TEMP);
-        File output = new File(sr.getScenarioName());
+        File output = new File(sr.getFileResultsAbsUrl());
 
         try {
             IOUtils.copy(input, output);
@@ -117,11 +135,10 @@ public class ESBQualificationToolController {
 
         informViewScenarioLaunchingIsFinished();
         System.out.println("[Controller] startScenarioExecution method is finished");
-        System.exit(0) ; 
     }
 
-    public void stopScenario() {
-        // loic's code here
+    public void stopScenarioExecution() {
+        System.out.println("[Controller] stopScenarioExcution method called");
     }
 
     public void informViewScenarioIsLaunching() {

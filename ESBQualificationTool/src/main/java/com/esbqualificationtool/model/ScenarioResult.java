@@ -1,5 +1,7 @@
 package com.esbqualificationtool.model;
 
+import java.io.File;
+
 
 public class ScenarioResult {
 
@@ -15,8 +17,11 @@ public class ScenarioResult {
         return "" + scenarioName + "" ;
     }
 
-    public String getFileResultsUrl() {
-        return fileResultsUrl;
+    
+
+    public String getFileResultsAbsUrl() {
+       File f = new File(fileResultsUrl) ;
+        return f.getAbsolutePath();
     }
 
     public String getScenarioName() {
@@ -30,6 +35,11 @@ public class ScenarioResult {
     public void setScenarioName(String scenarioName) {
         this.scenarioName = scenarioName;
     }
+
+    public String toString() {
+        return scenarioName;
+    }
+
 
 
 

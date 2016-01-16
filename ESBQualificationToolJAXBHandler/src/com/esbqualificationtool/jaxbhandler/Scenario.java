@@ -81,6 +81,13 @@ public class Scenario {
     @XmlElement(required = true)
     protected List<Scenario.Flow> flow;
 
+    @Override
+    public String toString() {
+        return name ;
+    }
+
+
+
     /**
      * Gets the value of the name property.
      * 
