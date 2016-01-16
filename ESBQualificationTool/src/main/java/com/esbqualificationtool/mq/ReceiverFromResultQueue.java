@@ -13,6 +13,7 @@ import com.rabbitmq.client.Envelope;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import javax.swing.JOptionPane;
 
 // This class should be a singleton
 // There can be only one ResultQueue created.
@@ -27,17 +28,16 @@ public class ReceiverFromResultQueue extends Thread {
     private int endFlowMessagesReceived;
     private ESBQualificationToolController controller;
     private boolean needToBeTerminated;
-    private Connection connection ;
-    private Channel channel ;
-
+    private Connection connection;
+    private Channel channel;
 
     public ReceiverFromResultQueue(Scenario scenario, ESBQualificationToolController controller) {
         this.scenario = scenario;
         this.endFlowMessagesReceived = 0;
         this.controller = controller;
         this.needToBeTerminated = false;
-        connection = null ;
-        channel = null ;
+        connection = null;
+        channel = null;
     }
 
     public Channel getChannel() {
@@ -47,7 +47,6 @@ public class ReceiverFromResultQueue extends Thread {
     public Connection getConnection() {
         return connection;
     }
-
 
     public boolean isNeedToBeTerminated() {
         return needToBeTerminated;
@@ -98,9 +97,26 @@ public class ReceiverFromResultQueue extends Thread {
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready to index " + resultString);
                         ElasticsearchUtils.indexToES(resultString, scenario.getName());
                     }
+
+                    if (needToBeTerminated) {
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready to cancel the connection");
+                        try {
+                            this.getChannel().basicCancel(consumerTag);
+                            this.getChannel().close();
+                            this.getChannel().getConnection().close();
+                            System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Connection with queue cancelled");
+                        } catch (IOException ex) {
+                            controller.getView().displayPopUp("Error IO closing queue", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+                        } catch (TimeoutException ex) {
+                            controller.getView().displayPopUp("Error Timeout closing queue", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+
+
                 }
             };
             channel.basicConsume(queueName, true, consumer);
+            System.out.println("[ReceiverFromResultQueue] Thread is terminated");
         } catch (Exception ex) {
             controller.informErrorToView("Error during receiving : " + ex.getLocalizedMessage(), ex.getMessage());
         }

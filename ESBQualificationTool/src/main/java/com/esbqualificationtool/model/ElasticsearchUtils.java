@@ -14,8 +14,7 @@ import org.json.JSONObject;
 public class ElasticsearchUtils {
 
     private static final String ES_HOST = "192.168.0.103";
-    private static final String INDEX = "loictest";
-    private static int requestID = 1;
+    private static final String INDEX = "esbqualtool";
 
     public static void indexToES(String jsonString, String scenarioName) {
 
@@ -26,8 +25,7 @@ public class ElasticsearchUtils {
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
         jsonObj.put("postDate", nowAsISO);
-        jsonObj.put("requestID", requestID);
-        requestID++;
+        jsonObj.put("requestID", System.currentTimeMillis());
 
         System.out.println("[ElasticsearchUtils] Ready to send :\n " + jsonObj.toString());
 

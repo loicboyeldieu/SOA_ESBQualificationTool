@@ -37,7 +37,7 @@ public class ESBQualificationToolView {
     }
 
     public void informControllerToStartScenarioExecution() {        
-        controller.start();
+        controller.startScenarioExecution(); 
     }
 
     public void informControllerToStopScenarioExecution() {
