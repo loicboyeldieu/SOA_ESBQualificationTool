@@ -2,6 +2,7 @@ package com.esbqualificationtool.mq;
 
 import com.esbqualificationtool.flowlauncher.FlowLauncher;
 import com.esbqualificationtool.consumerlauncher.*;
+import com.esbqualificationtool.flowlauncher.FlowLauncherExecutor;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -18,14 +19,21 @@ import java.util.logging.Logger;
 public class ReceiverFromFlowQueue {
 
     private static final String FLOW_QUEUE_HOST = "192.168.0.104";
-    private static final String END_FLOW_RESULTS = "FLOW_END";
-    private static final String SCENARIO_ABORTED = "SCENARIO_ABORTED";
-    private String exchange_name;
-    private ArrayList flowLauncherList;
+    private static final String EXCHANGE_NAME = "flowQueue";
+    private static final String BROADCAST_TOPIC = "*.all";
+    private static final String END_FLOWS_TOKEN = "SCENARIO_END_OF_FLOWS";
+    private static final String START_ACTION = "START";
+    private static final String STOP_ACTION = "STOP";
+    private static final String READY_MESSAGE = "READY";
+    private static final String FLOW_STOPED_MESSAGE = "FLOW_STOPPED";
+    private String topic;
+    private ArrayList messageFlowsList;
+    private FlowLauncherExecutor flowExecutor;
 
-    public ReceiverFromFlowQueue(String exchange_name) {
-        this.exchange_name = exchange_name;
-        flowLauncherList = new ArrayList();
+    public ReceiverFromFlowQueue(String topic) {
+        this.topic = topic;
+        this.messageFlowsList = new ArrayList();
+        this.flowExecutor = null;
     }
 
     public void receiveFlows() {
@@ -34,9 +42,12 @@ public class ReceiverFromFlowQueue {
             factory.setHost(FLOW_QUEUE_HOST);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            channel.exchangeDeclare(exchange_name, "fanout");
+            channel.exchangeDeclare(EXCHANGE_NAME, "topic");
             String queueName = channel.queueDeclare().getQueue();
-            channel.queueBind(queueName, exchange_name, "");
+
+            channel.queueBind(queueName, EXCHANGE_NAME, this.topic);
+            channel.queueBind(queueName, EXCHANGE_NAME, BROADCAST_TOPIC);
+
             System.out.println("[ReceiverFromFlowQueue] Waiting for messages. To exit press CTRL+C");
             Consumer consumer = new DefaultConsumer(channel) {
 
@@ -44,18 +55,35 @@ public class ReceiverFromFlowQueue {
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     System.out.println("[ReceiverFromFlowQueue - Consumer] Message received from queue !");
                     String message = new String(body, "UTF-8");
-                    System.out.println("!!!" + message + "!!!");
-                    if (message.equals("STOP_SIGNAL")) {
-                        for (int i=0; i<flowLauncherList.size(); i++){
-                            FlowLauncher flowLauncher = (FlowLauncher) flowLauncherList.get(i);
-                            flowLauncher.stopFlows();
-                            SenderToResultQueue sender = new SenderToResultQueue();
-                            sender.sendToResultQueue(SCENARIO_ABORTED);
-                        }
+
+                    if (message.equals(START_ACTION)) {
+                        // Start the scenario
+                        // TODO You need to specify a time at which to start
+                        // Thread.sleep(startDelay);
+                        System.out.println("START MESSAGE received");
+
+                        flowExecutor.start();
+                    } else if (message.equals(STOP_ACTION)) {
+                        System.out.println("STOP MESSAGE received");
+                        flowExecutor.stopFlowExecution();
+                        flowExecutor.stop();
+
+//                        if (flowLauncherExecutor.isAlive()){
+//                            System.out.println("#####  EXECUTION IS RUNNING");
+//                            flowLauncherExecutor.stopFlowExecution();
+//                            System.out.println("#####  ALL FLOWS STOPPED");
+//                            flowLauncherExecutor.destroy();
+//                        }
+                        SenderToResultQueue sender = new SenderToResultQueue();
+                        sender.sendToResultQueue(FLOW_STOPED_MESSAGE);
+                    } else if (message.equals(END_FLOWS_TOKEN)) {
+                        // Send ready to the application
+                        SenderToResultQueue sender = new SenderToResultQueue();
+                        sender.sendToResultQueue(READY_MESSAGE);
+                        flowExecutor = new FlowLauncherExecutor(messageFlowsList);
                     } else {
-                        FlowLauncher flowLauncher = new FlowLauncher();
-                        flowLauncherList.add(flowLauncher);
-                        flowLauncher.launchFlows(message);
+                        // We received a flow to store in the list
+                        messageFlowsList.add(message);
                     }
 
                 }

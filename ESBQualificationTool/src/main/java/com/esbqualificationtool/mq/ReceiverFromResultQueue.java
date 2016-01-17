@@ -19,13 +19,25 @@ import javax.swing.JOptionPane;
 // There can be only one ResultQueue created.
 public class ReceiverFromResultQueue extends Thread {
 
+
+    // TODO Configuration file
     public static final String FILE_TEMP = "resultsFileTemp";
     private static final String EXCHANGE_NAME = "requestResult";
-    private static final String END_FLOW_RESULTS = "FLOW_END";
-    private static final String SCENARIO_ABORTED = "SCENARIO_ABORTED";
+    
     private static final String QUEUE_HOST = "192.168.0.104";
+    private static final int CONSUMERS_NUMBER = 2;
+
+    private static final String SEND_TO_BROADCAST_KEY = ".all";
+
+    private static final String END_FLOWS_TOKEN = "SCENARIO_END_OF_FLOWS";
+    private static final String START_ACTION = "START";
+    private static final String STOP_ACTION = "STOP";
+    private static final String READY_MESSAGE = "READY";
+    private static final String FLOW_STOPED_MESSAGE = "FLOW_STOPPED";
+
     private Scenario scenario;
-    private int endFlowMessagesReceived;
+    private int consumerReadyMessages;
+    private int consumerStoppedMessages;
     private ESBQualificationToolController controller;
     private boolean needToBeTerminated;
     private Connection connection;
@@ -33,7 +45,8 @@ public class ReceiverFromResultQueue extends Thread {
 
     public ReceiverFromResultQueue(Scenario scenario, ESBQualificationToolController controller) {
         this.scenario = scenario;
-        this.endFlowMessagesReceived = 0;
+        this.consumerReadyMessages = 0;
+        this.consumerStoppedMessages = 0;
         this.controller = controller;
         this.needToBeTerminated = false;
         connection = null;
@@ -60,7 +73,7 @@ public class ReceiverFromResultQueue extends Thread {
             writer = new FileWriter(FILE_TEMP, false);
             writer.close();
 
-            final int flows = scenario.getFlow().size();
+            
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(QUEUE_HOST);
             connection = factory.newConnection();
@@ -76,24 +89,36 @@ public class ReceiverFromResultQueue extends Thread {
 
                     String resultString = new String(body, "UTF-8");
 
-                    System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] One Result received ! ");
+                    System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Result received: " + resultString);
 
-                    if (resultString.equals(END_FLOW_RESULTS)) {
-                        endFlowMessagesReceived++;
-                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] End message received");
-                        if (endFlowMessagesReceived == flows) {
-                            System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Scenario's end has been reached");
-                            needToBeTerminated = true;
+                    if (resultString.equals(READY_MESSAGE)) {
+                        consumerReadyMessages++;
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready message received");
+                        if (consumerReadyMessages == CONSUMERS_NUMBER) {
+                            // TODO Allow the start button to be clicked
+                            // And put the following code to the start button
+                            
+                            System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] All Consumers are ready to start");
                         }
-                    } else if (resultString.equals(SCENARIO_ABORTED)) {
-                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] User has decided to stop application");
+                    } else if (resultString.equals("ENDED_ALL_REQUEST_TREATED")) {
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Application has been executed");
                         needToBeTerminated = true;
 
-                    } else {
+                    }
+                    else if (resultString.equals(FLOW_STOPED_MESSAGE)){
+                        consumerStoppedMessages++;
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready message received");
+                        if (consumerStoppedMessages == CONSUMERS_NUMBER) {
+                            needToBeTerminated = true;
+                        }
+                    }
+                    else {
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Add results received to a text file");
                         FileWriter writer = new FileWriter(FILE_TEMP, true);
                         writer.write(resultString);
                         writer.close();
+                        System.out.println("SCENARIO NAME: "+scenario.getName());
+
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready to index " + resultString);
                         ElasticsearchUtils.indexToES(resultString, scenario.getName());
                     }
@@ -116,7 +141,7 @@ public class ReceiverFromResultQueue extends Thread {
                 }
             };
             channel.basicConsume(queueName, true, consumer);
-            System.out.println("[ReceiverFromResultQueue] Thread is terminated");
+            System.out.println("[ReceiverFromResultQueue] Received result and thread is terminated");
         } catch (Exception ex) {
             controller.informErrorToView("Error during receiving : " + ex.getLocalizedMessage(), ex.getMessage());
         }

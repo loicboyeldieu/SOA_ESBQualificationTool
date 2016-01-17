@@ -21,8 +21,8 @@ public class UserBehaviour extends Thread{
             Thread.sleep(userTimeBeforeStopApplicationInSec * 1000);
             for (int i=0; i<10; i++){
                 System.out.println((String)consumerList.get(i));
-                SenderToFlowQueue sender = new SenderToFlowQueue((String)consumerList.get(i));
-                sender.sendFlowStringToQueue("STOP_SIGNAL");
+                //SenderToFlowQueue sender = new SenderToFlowQueue((String)consumerList.get(i));
+                //sender.sendFlowStringToQueue("STOP_SIGNAL");
             }
             
         } catch (InterruptedException ex) {

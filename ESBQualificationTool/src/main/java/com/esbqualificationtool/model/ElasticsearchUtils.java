@@ -29,10 +29,10 @@ public class ElasticsearchUtils {
 
         System.out.println("[ElasticsearchUtils] Ready to send :\n " + jsonObj.toString());
 
-        Client client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(ES_HOST, 9300));
-        IndexResponse indexResponse = (IndexResponse) client.prepareIndex(INDEX, scenarioName).setSource(jsonObj.toString()).execute().actionGet();
+        //Client client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(ES_HOST, 9300));
+        //IndexResponse indexResponse = (IndexResponse) client.prepareIndex(INDEX, scenarioName).setSource(jsonObj.toString()).execute().actionGet();
 
-        client.close();
+        //client.close();
         System.out.println("[ElasticsearchUtils] Indexed to Elasticsearch !");
     }
 }

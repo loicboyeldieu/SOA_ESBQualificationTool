@@ -2,6 +2,7 @@ package com.esbqualificationtool.controller;
 
 import com.esbqualificationtool.jaxbhandler.*;
 import com.esbqualificationtool.jaxbhandler.Scenario.Flow;
+import com.esbqualificationtool.mq.ReceiverFromResultQueue;
 import com.esbqualificationtool.mq.SenderToFlowQueue;
 import com.esbqualificationtool.view.ESBQualificationToolView;
 import com.esbqualificationtool.xmlHelper.XMLHelper;
@@ -10,6 +11,9 @@ import javax.swing.JOptionPane;
 
 public class ESBQualificationToolController {
 
+    private static final String END_FLOWS_TOKEN = "SCENARIO_END_OF_FLOWS";
+    private static final String SEND_TO_BROADCAST_KEY = ".all";
+    
     private JAXBScenarioHandler jaxbScenarioHandler;
     private ESBQualificationToolView view;
     private DefaultListModel scenarios;
@@ -71,28 +75,39 @@ public class ESBQualificationToolController {
         System.out.println("[Controller] launchScenario method called");
         selectedScenario = scenario;
 
+        ReceiverFromResultQueue receiverFromResultQueue = new ReceiverFromResultQueue(selectedScenario, this);
+        System.out.println("[Controller] Ready to receive results");
+
+        try {
+            receiverFromResultQueue.start();
+        } catch (Exception ex) {
+            this.getView().displayPopUp("Starting scenario", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
+
         for (int i = 0; i < scenario.getFlow().size(); i++) {
             Flow flow = (Flow) scenario.getFlow().get(i);
             String flowString = jaxbScenarioHandler.getFlowXMLStringFromFlowObject(flow);
 
             ConsumerType consumer = flow.getConsumer();
-            SenderToFlowQueue queueSender = new SenderToFlowQueue(consumer.value());
-            queueSender.sendFlowStringToQueue(flowString);
+            SenderToFlowQueue queueSender = new SenderToFlowQueue();
+            queueSender.sendFlowStringToQueue(consumer.value().concat("."), flowString);
             System.out.println("[Controller] Sent one flow to queue");
         }
+
+        SenderToFlowQueue sender = new SenderToFlowQueue();
+        sender.sendFlowStringToQueue(SEND_TO_BROADCAST_KEY, END_FLOWS_TOKEN);
+
         System.out.println("[Controller] All the flows have been sent to queue");
     }
 
     public void startScenarioExecution() {
-        ScenarioStartExecutor scenarioExecutor = new ScenarioStartExecutor(selectedScenario, this);
-        scenarioExecutor.start();
+        ScenarioStartExecutor scenarioStartExecutor = new ScenarioStartExecutor();
+        scenarioStartExecutor.start();
     }
 
     public void stopScenarioExecution() {
-        System.out.println("[Controller] stopScenarioExcution method called");
-        // loic stop code here
-        // Create un class Thread scenarioStopExecutor ? 
-
+        ScenarioStopExecutor scenarioStopExecutor = new ScenarioStopExecutor();
+        scenarioStopExecutor.start();
     }
 
     public void informViewScenarioIsLaunching() {

@@ -12,7 +12,10 @@ public class ConsumerLauncher {
             try {
                 ConsumerType consumer = ConsumerType.fromValue(args[0]);
 
-                ReceiverFromFlowQueue receiver = new ReceiverFromFlowQueue(consumer.value());
+                String topic = args[0].concat(".*");
+                System.out.println("I suscribe to the topic: "+topic);
+                
+                ReceiverFromFlowQueue receiver = new ReceiverFromFlowQueue(topic);
                 System.out.println(" [Consumer Launcher] Consumer launcher is starting...");
                 System.out.println(" [Consumer Launcher] Ready to receive flows.");
                 receiver.receiveFlows();
