@@ -64,6 +64,7 @@ public class ReceiverFromFlowQueue {
                         System.out.println("STOP MESSAGE received");
                         flowExecutor.stopFlowExecution();
                         flowExecutor.stop();
+                        messageFlowsList = new ArrayList();
 //                        if (flowLauncherExecutor.isAlive()){
 //                            System.out.println("#####  EXECUTION IS RUNNING");
 //                            flowLauncherExecutor.stopFlowExecution();
