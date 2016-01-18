@@ -1,7 +1,6 @@
 package com.esbqualificationtool.view;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+
 
 public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
 
@@ -12,7 +11,6 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
 //        s.setVisible(true);
 //        while(true) {}
 //    }
-
     /** Creates new form ScenarioLaunchingForm */
     public ScenarioLaunchingJFrame(ESBQualificationToolView view) {
         this.view = view;
@@ -31,7 +29,7 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButtonStart = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Scenario is launching...");
         setAlwaysOnTop(true);
 
@@ -83,17 +81,11 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
-       resetJButtonEnable();
-       this.setVisible(false);
-       view.getMainFrameJFrame().setVisible(true);
         view.informControllerToStopScenarioExecution();
-        
     }//GEN-LAST:event_jButtonStopActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         view.informControllerToStartScenarioExecution();
-        jButtonStop.setEnabled(true);
-        jButtonStart.setEnabled(false);
     }//GEN-LAST:event_jButtonStartActionPerformed
     /**
      * @param args the command line arguments
@@ -111,16 +103,11 @@ public class ScenarioLaunchingJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
-    public JLabel getjLabel1() {
-        return this.jLabel1;
+    public void setjButtonStartVisible(boolean bool) {
+        this.jButtonStart.setEnabled(bool);
     }
 
-    public void setMessageText(String msg) {
-        this.getjLabel1().setText(msg);
-    }
-
-    public void resetJButtonEnable() {
-        jButtonStart.setEnabled(true);
-        jButtonStop.setEnabled(false);
+    public void setjButtonStopVisible(boolean bool) {
+        this.jButtonStop.setEnabled(bool);
     }
 }

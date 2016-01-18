@@ -13,50 +13,46 @@ public class ScenarioStartExecutor extends Thread {
 
     private static final String SEND_TO_BROADCAST_KEY = ".all";
     private static final String START_ACTION = "START";
+    private Scenario selectedScenario;
+    private ESBQualificationToolController controller;
 
-
-    public ScenarioStartExecutor(){
+    public ScenarioStartExecutor(Scenario scenario, ESBQualificationToolController controller) {
+        this.selectedScenario = scenario;
+        this.controller = controller;
     }
 
     public void run() {
         SenderToFlowQueue sender = new SenderToFlowQueue();
         sender.sendFlowStringToQueue(SEND_TO_BROADCAST_KEY, START_ACTION);
+
+
+
+        while (controller.getReceiverFromResultQueue().isNeedToBeTerminated() == false) {
+            // queue is receiving - thread blocked here until receiving STOP or END
+        }
+
+        System.out.println("[Controller] ReceiverFromResultQueue is terminated");
+
+        ScenarioResult sr = new ScenarioResult(selectedScenario.getName());
+        File input = new File(ReceiverFromResultQueue.FILE_TEMP);
+        File output = new File(sr.getFileResultsAbsUrl());
+
+        try {
+            IOUtils.copy(input, output);
+            controller.getResults().addElement(sr);
+        } catch (IOException ex) {
+            controller.getView().displayPopUp("Error copying scenario result file", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
+
+
+        if(controller.isScenarioExecStopped()){
+        controller.informViewScenarioLaunchingIsFinished("was stopped");
+        }
+        else {
+         controller.informViewScenarioLaunchingIsFinished("was completely launched succesfully");
+        }
+        controller.setScenarioExecStopped(false) ;
+        System.out.println("[Controller] startScenarioExecution method is finished");
+
     }
-//    public void run() {
-//
-//        // loic's code for start
-//
-//
-//        System.out.println("[ScenarioExecutor] start method called");
-//
-//        ReceiverFromResultQueue receiverFromResultQueue = new ReceiverFromResultQueue(selectedScenario, controller);
-//        System.out.println("[Controller] Ready to receive results");
-//
-//        try {
-//            receiverFromResultQueue.start();
-//        } catch (Exception ex) {
-//            controller.getView().displayPopUp("Starting scenario", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
-//        }
-//
-//        while(receiverFromResultQueue.isNeedToBeTerminated() == false) {
-//            // queue is receiving - thread blocked here until receiving STOP or END
-//        }
-//
-//        System.out.println("[Controller] ReceiverFromResultQueue is terminated");
-//
-//        ScenarioResult sr = new ScenarioResult(selectedScenario.getName());
-//        File input = new File(ReceiverFromResultQueue.FILE_TEMP);
-//        File output = new File(sr.getFileResultsAbsUrl());
-//
-//        try {
-//            IOUtils.copy(input, output);
-//            controller.getResults().addElement(sr);
-//        } catch (IOException ex) {
-//            controller.getView().displayPopUp("Error copying scenario result file", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
-//        }
-//
-//        controller.informViewScenarioLaunchingIsFinished();
-//        System.out.println("[Controller] startScenarioExecution method is finished");
-//
-//    }
 }

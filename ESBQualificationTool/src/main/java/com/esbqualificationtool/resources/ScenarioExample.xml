@@ -25,7 +25,7 @@
         </request>
     </flow>
         <flow id="2">
-        <consumer>consumer1</consumer>
+        <consumer>consumer2</consumer>
         <startTimeInMs>5</startTimeInMs>
         <totalExecTimeInSec>30</totalExecTimeInSec>
         <frequencyInSec>10</frequencyInSec>

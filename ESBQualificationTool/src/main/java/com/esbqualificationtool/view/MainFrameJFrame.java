@@ -2,6 +2,7 @@ package com.esbqualificationtool.view;
 
 import com.esbqualificationtool.jaxbhandler.Scenario;
 import com.esbqualificationtool.model.ScenarioResult;
+import com.esbqualificationtool.resources.ClipBoardCopy;
 import java.awt.HeadlessException;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -52,7 +53,7 @@ public class MainFrameJFrame extends javax.swing.JFrame {
 
         jLabelLoad.setText("- Load a scenario");
 
-        jTextFieldXmlUrl.setText("/url/to/xml/file");
+        jTextFieldXmlUrl.setText("/home/ubuntu/SOA_ESBQualificationTool/ESBQualificationTool/src/main/java/com/esbqualificationtool/resources/ScenarioExample.xml");
 
         jButtonBrowse.setText("Browse");
         jButtonBrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -234,8 +235,13 @@ public class MainFrameJFrame extends javax.swing.JFrame {
     private void jButtonFileResultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileResultsActionPerformed
         if (jListResults.getSelectedValue() != null) {
             ScenarioResult sr = (ScenarioResult) jListResults.getSelectedValue();
-            JOptionPane.showMessageDialog(null, "Url to file results : " +
-                    sr.getFileResultsAbsUrl(), "File Result", JOptionPane.INFORMATION_MESSAGE);
+            int response = JOptionPane.showConfirmDialog(null, "Click on OK to copy the URL link in your clipboard. \nThen paste the link in your favorite explorer",
+                    "File result",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (response == JOptionPane.OK_OPTION) {
+                ClipBoardCopy mpp = new ClipBoardCopy();
+                mpp.setClipboardContents(sr.getFileResultsAbsUrl());
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a scenario result", "Erreur ! No scenario result selected", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -244,8 +250,13 @@ public class MainFrameJFrame extends javax.swing.JFrame {
     private void jButtonKibanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonKibanaActionPerformed
         if (jListResults.getSelectedValue() != null) {
             ScenarioResult sr = (ScenarioResult) jListResults.getSelectedValue();
-            JOptionPane.showMessageDialog(null, "Kibana URL : " +
-                    sr.getKibanaLink(), "Kibana", JOptionPane.INFORMATION_MESSAGE);
+            int response = JOptionPane.showConfirmDialog(null, "Click on OK to copy the Kibana link in your clipboard. \nThen paste the link in your favorite web browser",
+                    "Kibana",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (response == JOptionPane.OK_OPTION) {
+                ClipBoardCopy mpp = new ClipBoardCopy();
+                mpp.setClipboardContents(sr.getKibanaLink());
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a scenario result", "Erreur ! No scenario result selected", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -265,8 +276,6 @@ public class MainFrameJFrame extends javax.swing.JFrame {
         int result = input.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             setXmlUrlAbsPath(input.getSelectedFile().getAbsolutePath());
-        } else if (result == JFileChooser.CANCEL_OPTION) {
-            System.out.println("Cancel was selected");
         }
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 

@@ -12,10 +12,8 @@ public class SenderToFlowQueue {
     private static final String QUEUE_HOST = "192.168.0.104";
 
     public SenderToFlowQueue() {
-       
     }
 
-   
     public void sendFlowStringToQueue(String routingKey, String flowString) {
         try {
 
@@ -25,10 +23,8 @@ public class SenderToFlowQueue {
             Channel channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, "topic");
 
-
             channel.basicPublish(EXCHANGE_NAME, routingKey, null, flowString.getBytes());
-            System.out.println(" [SendertoFlow] Sent : " + routingKey +": " + flowString + "'");
-
+            System.out.println(" [SendertoFlow] Sent : " + routingKey + ": " + flowString + "'");
 
             channel.close();
             connection.close();

@@ -57,23 +57,28 @@ public class ReceiverFromFlowQueue {
                     String message = new String(body, "UTF-8");
 
                     if (message.equals(START_ACTION)) {
-                        // Start the scenario
-                        // TODO You need to specify a time at which to start
-                        // Thread.sleep(startDelay);
                         System.out.println("START MESSAGE received");
                         flowExecutor.start();
+
                     } else if (message.equals(STOP_ACTION)) {
                         System.out.println("STOP MESSAGE received");
                         flowExecutor.stopFlowExecution();
                         flowExecutor.stop();
-
+//                        if (flowLauncherExecutor.isAlive()){
+//                            System.out.println("#####  EXECUTION IS RUNNING");
+//                            flowLauncherExecutor.stopFlowExecution();
+//                            System.out.println("#####  ALL FLOWS STOPPED");
+//                            flowLauncherExecutor.destroy();
+//                        }
                         SenderToResultQueue sender = new SenderToResultQueue();
                         sender.sendToResultQueue(FLOW_STOPED_MESSAGE);
+
                     } else if (message.equals(END_FLOWS_TOKEN)) {
                         // Send ready to the application
                         SenderToResultQueue sender = new SenderToResultQueue();
                         sender.sendToResultQueue(READY_MESSAGE);
                         flowExecutor = new FlowLauncherExecutor(messageFlowsList);
+
                     } else {
                         // We received a flow to store in the list
                         messageFlowsList.add(message);

@@ -5,18 +5,15 @@ import com.esbqualificationtool.view.ESBQualificationToolView;
 
 public class ESBQualificationTool {
 
-    public static void main(String[] args){
+// An XML Scenario is available here :
+// /home/ubuntu/SOA_ESBQualificationTool/ESBQualificationTool/src/main/java/com/esbqualificationtool/resources/ScenarioExample.xml
+    public static void main(String[] args) {
 
-//String xmlUrl =  "/home/ubuntu/SOA_ESBQualificationTool/ESBQualificationTool/src/main/java/com/esbqualificationtool/resources/ScenarioExample.xml";
-
-
-        ESBQualificationToolController controller = new ESBQualificationToolController(null);   
+        ESBQualificationToolController controller = new ESBQualificationToolController(null);
         ESBQualificationToolView view = new ESBQualificationToolView(controller);
         controller.setView(view);
 
-        while(true) {  }
-
+        while (true) {  }
 
     }
-
 }

@@ -13,8 +13,8 @@ public class ConsumerLauncher {
                 ConsumerType consumer = ConsumerType.fromValue(args[0]);
 
                 String topic = args[0].concat(".*");
-                System.out.println("I suscribe to the topic: "+topic);
-                
+                System.out.println("I suscribe to the topic: " + topic);
+
                 ReceiverFromFlowQueue receiver = new ReceiverFromFlowQueue(topic);
                 System.out.println(" [Consumer Launcher] Consumer launcher is starting...");
                 System.out.println(" [Consumer Launcher] Ready to receive flows.");

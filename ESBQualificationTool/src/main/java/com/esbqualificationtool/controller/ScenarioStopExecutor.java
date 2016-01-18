@@ -2,7 +2,8 @@ package com.esbqualificationtool.controller;
 
 import com.esbqualificationtool.mq.SenderToFlowQueue;
 
-public class ScenarioStopExecutor extends Thread{
+public class ScenarioStopExecutor extends Thread {
+
     private static final String SEND_TO_BROADCAST_KEY = ".all";
     private static final String STOP_ACTION = "STOP";
 

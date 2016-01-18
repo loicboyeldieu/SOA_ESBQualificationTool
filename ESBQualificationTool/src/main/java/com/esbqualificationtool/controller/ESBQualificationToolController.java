@@ -13,18 +13,21 @@ public class ESBQualificationToolController {
 
     private static final String END_FLOWS_TOKEN = "SCENARIO_END_OF_FLOWS";
     private static final String SEND_TO_BROADCAST_KEY = ".all";
-    
     private JAXBScenarioHandler jaxbScenarioHandler;
     private ESBQualificationToolView view;
     private DefaultListModel scenarios;
     private DefaultListModel results;
     private Scenario selectedScenario;
+    private ReceiverFromResultQueue receiverFromResultQueue ;
+    private boolean scenarioExecStopped;
 
     public ESBQualificationToolController(ESBQualificationToolView view) {
         this.view = view;
         this.scenarios = new DefaultListModel();
         this.results = new DefaultListModel();
         this.selectedScenario = null;
+        this.receiverFromResultQueue = null ; 
+        this.scenarioExecStopped = false;
     }
 
     /* ******************************************** */
@@ -36,7 +39,6 @@ public class ESBQualificationToolController {
 
         try {
             isValid = XMLHelper.isXMLWellFormed(xmlUrl);
-            // scenarios.addElement(s);
         } catch (Exception ex) {
             view.displayPopUp("Scenario error : XML not well-formed", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
@@ -70,19 +72,14 @@ public class ESBQualificationToolController {
 
     public void launchScenario(Scenario scenario) {
 
-        informViewScenarioIsLaunching();
-
         System.out.println("[Controller] launchScenario method called");
         selectedScenario = scenario;
 
-        ReceiverFromResultQueue receiverFromResultQueue = new ReceiverFromResultQueue(selectedScenario, this);
-        System.out.println("[Controller] Ready to receive results");
 
-        try {
-            receiverFromResultQueue.start();
-        } catch (Exception ex) {
-            this.getView().displayPopUp("Starting scenario", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }
+        receiverFromResultQueue = new ReceiverFromResultQueue(selectedScenario, this);
+        System.out.println("[Controller] Ready to receive results");
+        receiverFromResultQueue.start();
+
 
         for (int i = 0; i < scenario.getFlow().size(); i++) {
             Flow flow = (Flow) scenario.getFlow().get(i);
@@ -101,31 +98,31 @@ public class ESBQualificationToolController {
     }
 
     public void startScenarioExecution() {
-        ScenarioStartExecutor scenarioStartExecutor = new ScenarioStartExecutor();
+        ScenarioStartExecutor scenarioStartExecutor = new ScenarioStartExecutor(selectedScenario, this);
         scenarioStartExecutor.start();
     }
 
     public void stopScenarioExecution() {
+        scenarioExecStopped = true;
         ScenarioStopExecutor scenarioStopExecutor = new ScenarioStopExecutor();
         scenarioStopExecutor.start();
     }
 
-    public void informViewScenarioIsLaunching() {
-        view.scenarioIsLaunching();
-    }
-
-    public void informViewScenarioLaunchingIsFinished() {
-        view.scenarioLaunchingIsFinished();
+    public void informViewScenarioLaunchingIsFinished(String msg) {
+        view.scenarioLaunchingIsFinished(msg);
     }
 
     public void informErrorToView(String title, String message) {
         view.displayPopUp(title, message, JOptionPane.ERROR_MESSAGE);
     }
 
-
     /* ******************************************* */
     /* ******************GETTERS ***************** */
     /* ******************************************* */
+    public boolean isScenarioExecStopped() {
+        return scenarioExecStopped;
+    }
+
     public DefaultListModel getResults() {
         return results;
     }
@@ -138,6 +135,12 @@ public class ESBQualificationToolController {
         return selectedScenario;
     }
 
+    public ReceiverFromResultQueue getReceiverFromResultQueue() {
+        return receiverFromResultQueue;
+    }
+    
+
+
     public ESBQualificationToolView getView() {
         return view;
     }
@@ -145,6 +148,10 @@ public class ESBQualificationToolController {
     /* ******************************************* */
     /* ******************SETTERS ***************** */
     /* ******************************************* */
+    public void setScenarioExecStopped(boolean scenarioExecStopped) {
+        this.scenarioExecStopped = scenarioExecStopped;
+    }
+
     public void setResults(DefaultListModel results) {
         this.results = results;
     }

@@ -15,49 +15,34 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import javax.swing.JOptionPane;
 
-// This class should be a singleton
-// There can be only one ResultQueue created.
 public class ReceiverFromResultQueue extends Thread {
 
     // TODO Configuration file
+   //private static final int CONSUMERS_NUMBER = 2;
     public static final String FILE_TEMP = "resultsFileTemp";
     private static final String EXCHANGE_NAME = "requestResult";
     private static final String QUEUE_HOST = "192.168.0.104";
-    private static final int CONSUMERS_NUMBER = 2;
     private static final String SEND_TO_BROADCAST_KEY = ".all";
     private static final String END_FLOWS_TOKEN = "SCENARIO_END_OF_FLOWS";
     private static final String START_ACTION = "START";
     private static final String STOP_ACTION = "STOP";
     private static final String READY_MESSAGE = "READY";
     private static final String FLOW_STOPED_MESSAGE = "FLOW_STOPPED";
-    private static final String FLOW_TERMINATED = "FLOW_TERMINATED";
+    private static final String END_FLOW_RESULTS = "FLOW_END";
     private Scenario scenario;
+    private ESBQualificationToolController controller;
     private int consumerReadyMessages;
     private int consumerStoppedMessages;
-    private int flowTerminated;
-    private ESBQualificationToolController controller;
+    private int endFlowMessagesReceived;
     private boolean needToBeTerminated;
-    private Connection connection;
-    private Channel channel;
 
     public ReceiverFromResultQueue(Scenario scenario, ESBQualificationToolController controller) {
         this.scenario = scenario;
         this.consumerReadyMessages = 0;
         this.consumerStoppedMessages = 0;
-        this.flowTerminated = 0;
+        this.endFlowMessagesReceived = 0;
         this.controller = controller;
         this.needToBeTerminated = false;
-        connection = null;
-        channel = null;
-
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public Connection getConnection() {
-        return connection;
     }
 
     public boolean isNeedToBeTerminated() {
@@ -72,15 +57,18 @@ public class ReceiverFromResultQueue extends Thread {
             writer = new FileWriter(FILE_TEMP, false);
             writer.close();
 
+            final int nbflows = scenario.getFlow().size();
 
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(QUEUE_HOST);
-            connection = factory.newConnection();
-            channel = connection.createChannel();
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
             String queueName = channel.queueDeclare().getQueue();
             channel.queueBind(queueName, EXCHANGE_NAME, "");
+
             System.out.println("[ReceiverFromResultsQueue] Waiting for results...");
+
             Consumer consumer = new DefaultConsumer(channel) {
 
                 //@Override
@@ -93,25 +81,22 @@ public class ReceiverFromResultQueue extends Thread {
                     if (resultString.equals(READY_MESSAGE)) {
                         consumerReadyMessages++;
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready message received");
-                        if (consumerReadyMessages == CONSUMERS_NUMBER) {
-                            // TODO Allow the start button to be clicked
-                            // And put the following code to the start button
-
+                        if (consumerReadyMessages == nbflows) {
+                            controller.getView().scenarioIsReadyToBeStarted();
                             System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] All Consumers are ready to start");
                         }
-                    } else if (resultString.equals(FLOW_TERMINATED)) {
-                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Scenario has been executed successfully");
-                        flowTerminated++;
-                        //System.out.println(flowTerminated + " out of " + scenario.getFlow().size() + " done.");
-                        if (flowTerminated == CONSUMERS_NUMBER) {
-                            needToBeTerminated = true;
-                            controller.informViewScenarioLaunchingIsFinished();
-                        }
-
                     } else if (resultString.equals(FLOW_STOPED_MESSAGE)) {
+                        // problem if many flows sent to same consumer
                         consumerStoppedMessages++;
-                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Stopped message received");
-                        if (consumerStoppedMessages == CONSUMERS_NUMBER) {
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Flow stop message received");
+                        if (consumerStoppedMessages == nbflows) {
+                            needToBeTerminated = true;
+                        }
+                    } else if (resultString.equals(END_FLOW_RESULTS)) {
+                        endFlowMessagesReceived++;
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] End message received");
+                        if (endFlowMessagesReceived == nbflows) {
+                            System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Scenario's end has been reached");
                             needToBeTerminated = true;
                         }
                     } else {
@@ -138,8 +123,6 @@ public class ReceiverFromResultQueue extends Thread {
                             controller.getView().displayPopUp("Error Timeout closing queue", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
                         }
                     }
-
-
                 }
             };
             channel.basicConsume(queueName, true, consumer);
