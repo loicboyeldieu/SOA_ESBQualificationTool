@@ -18,8 +18,6 @@ public class FlowLauncher {
     public static final String P1 = ProducerType.PRODUCER_1.value();
     public static final String P2 = ProducerType.PRODUCER_2.value();
     
-    //private static final String END_FLOW_RESULTS = "FLOW_END";
-    public static final int TIME_IN_SEC_TO_WAIT_BEFORE_END = 1;
     private ArrayList requestToProducerList = new ArrayList();
 
     public void launchFlows(String flowsString) {
@@ -62,21 +60,6 @@ public class FlowLauncher {
                 Logger.getLogger(ConsumerLauncher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        // here the total time execution has been reached, we kill all pending thread 
-        // and send END_FLOW to queue (for the application)
-//        try {
-//            Thread.sleep(TIME_IN_SEC_TO_WAIT_BEFORE_END * 1000);
-//            System.out.println("[Flow Launcher] Flow - " + flow.getId() + " total time execution exceed");
-//
-//            stopFlows();
-//            SenderToResultQueue endSender = new SenderToResultQueue();
-//            endSender.sendToResultQueue(END_FLOW_RESULTS);
-//
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(FlowLauncher.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
 
     }
 

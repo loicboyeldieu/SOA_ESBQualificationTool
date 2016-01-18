@@ -61,19 +61,12 @@ public class ReceiverFromFlowQueue {
                         // TODO You need to specify a time at which to start
                         // Thread.sleep(startDelay);
                         System.out.println("START MESSAGE received");
-
                         flowExecutor.start();
                     } else if (message.equals(STOP_ACTION)) {
                         System.out.println("STOP MESSAGE received");
                         flowExecutor.stopFlowExecution();
                         flowExecutor.stop();
 
-//                        if (flowLauncherExecutor.isAlive()){
-//                            System.out.println("#####  EXECUTION IS RUNNING");
-//                            flowLauncherExecutor.stopFlowExecution();
-//                            System.out.println("#####  ALL FLOWS STOPPED");
-//                            flowLauncherExecutor.destroy();
-//                        }
                         SenderToResultQueue sender = new SenderToResultQueue();
                         sender.sendToResultQueue(FLOW_STOPED_MESSAGE);
                     } else if (message.equals(END_FLOWS_TOKEN)) {

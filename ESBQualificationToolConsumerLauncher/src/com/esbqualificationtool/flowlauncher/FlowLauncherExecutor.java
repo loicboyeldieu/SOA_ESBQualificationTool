@@ -1,8 +1,12 @@
 package com.esbqualificationtool.flowlauncher;
 
+import com.esbqualificationtool.mq.SenderToResultQueue;
 import java.util.ArrayList;
 
+
 public class FlowLauncherExecutor extends Thread {
+
+    public static final String FLOW_TERMINATED = "FLOW_TERMINATED";
 
     private ArrayList messageFlowsList;
     private ArrayList flowLauncherList;
@@ -20,6 +24,8 @@ public class FlowLauncherExecutor extends Thread {
             flowLauncherList.add(flowLauncher);
             flowLauncher.launchFlows(flowMessage);
         }
+        SenderToResultQueue sender = new SenderToResultQueue();
+        sender.sendToResultQueue(FLOW_TERMINATED);
     }
 
     public void stopFlowExecution(){

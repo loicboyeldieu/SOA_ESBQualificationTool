@@ -19,25 +19,22 @@ import javax.swing.JOptionPane;
 // There can be only one ResultQueue created.
 public class ReceiverFromResultQueue extends Thread {
 
-
     // TODO Configuration file
     public static final String FILE_TEMP = "resultsFileTemp";
     private static final String EXCHANGE_NAME = "requestResult";
-    
     private static final String QUEUE_HOST = "192.168.0.104";
     private static final int CONSUMERS_NUMBER = 2;
-
     private static final String SEND_TO_BROADCAST_KEY = ".all";
-
     private static final String END_FLOWS_TOKEN = "SCENARIO_END_OF_FLOWS";
     private static final String START_ACTION = "START";
     private static final String STOP_ACTION = "STOP";
     private static final String READY_MESSAGE = "READY";
     private static final String FLOW_STOPED_MESSAGE = "FLOW_STOPPED";
-
+    private static final String FLOW_TERMINATED = "FLOW_TERMINATED";
     private Scenario scenario;
     private int consumerReadyMessages;
     private int consumerStoppedMessages;
+    private int flowTerminated;
     private ESBQualificationToolController controller;
     private boolean needToBeTerminated;
     private Connection connection;
@@ -47,10 +44,12 @@ public class ReceiverFromResultQueue extends Thread {
         this.scenario = scenario;
         this.consumerReadyMessages = 0;
         this.consumerStoppedMessages = 0;
+        this.flowTerminated = 0;
         this.controller = controller;
         this.needToBeTerminated = false;
         connection = null;
         channel = null;
+
     }
 
     public Channel getChannel() {
@@ -73,7 +72,7 @@ public class ReceiverFromResultQueue extends Thread {
             writer = new FileWriter(FILE_TEMP, false);
             writer.close();
 
-            
+
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(QUEUE_HOST);
             connection = factory.newConnection();
@@ -97,27 +96,30 @@ public class ReceiverFromResultQueue extends Thread {
                         if (consumerReadyMessages == CONSUMERS_NUMBER) {
                             // TODO Allow the start button to be clicked
                             // And put the following code to the start button
-                            
+
                             System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] All Consumers are ready to start");
                         }
-                    } else if (resultString.equals("ENDED_ALL_REQUEST_TREATED")) {
-                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Application has been executed");
-                        needToBeTerminated = true;
+                    } else if (resultString.equals(FLOW_TERMINATED)) {
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Scenario has been executed successfully");
+                        flowTerminated++;
+                        //System.out.println(flowTerminated + " out of " + scenario.getFlow().size() + " done.");
+                        if (flowTerminated == CONSUMERS_NUMBER) {
+                            needToBeTerminated = true;
+                            controller.informViewScenarioLaunchingIsFinished();
+                        }
 
-                    }
-                    else if (resultString.equals(FLOW_STOPED_MESSAGE)){
+                    } else if (resultString.equals(FLOW_STOPED_MESSAGE)) {
                         consumerStoppedMessages++;
-                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready message received");
+                        System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Stopped message received");
                         if (consumerStoppedMessages == CONSUMERS_NUMBER) {
                             needToBeTerminated = true;
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Add results received to a text file");
                         FileWriter writer = new FileWriter(FILE_TEMP, true);
                         writer.write(resultString);
                         writer.close();
-                        System.out.println("SCENARIO NAME: "+scenario.getName());
+                        System.out.println("SCENARIO NAME: " + scenario.getName());
 
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready to index " + resultString);
                         ElasticsearchUtils.indexToES(resultString, scenario.getName());

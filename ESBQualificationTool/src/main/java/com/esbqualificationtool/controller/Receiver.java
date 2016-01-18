@@ -19,7 +19,6 @@ public class Receiver {
     }
 
     private static final String EXCHANGE_NAME = "test2";
-    private static final String END_FLOW_RESULTS = "FLOW_END";
     private static final String QUEUE_HOST = "192.168.0.104";
 
 
