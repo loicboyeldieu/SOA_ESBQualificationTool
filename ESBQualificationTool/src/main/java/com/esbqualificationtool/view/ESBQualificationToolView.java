@@ -29,28 +29,33 @@ public class ESBQualificationToolView {
     public void informControllerToLaunchScenario(Scenario s) {
         scenarioLaunchingJFrame.setjButtonStopVisible(false);
         scenarioLaunchingJFrame.setjButtonStartVisible(false);
-        mainFrameJFrame.setVisible(false);
+        scenarioLaunchingJFrame.setjLabelText("Sending flows to the consumers...");
         scenarioLaunchingJFrame.setVisible(true);
+        mainFrameJFrame.setVisible(false);
         controller.launchScenario(s);
     }
 
     public void scenarioIsReadyToBeStarted() {
+        scenarioLaunchingJFrame.setjLabelText("Consumers are ready. Click on Start to execute scenario.");
         scenarioLaunchingJFrame.setjButtonStartVisible(true);
     }
 
     public void informControllerToStartScenarioExecution() {
-        scenarioLaunchingJFrame.setjButtonStartVisible(false);
+       scenarioLaunchingJFrame.setjLabelText("Scenario is executing ...");
+       scenarioLaunchingJFrame.setjButtonStartVisible(false);
         scenarioLaunchingJFrame.setjButtonStopVisible(true);
         controller.startScenarioExecution();
     }
 
     public void informControllerToStopScenarioExecution() {
+        scenarioLaunchingJFrame.setjLabelText("Stopping execution ...");
         scenarioLaunchingJFrame.setVisible(false);
         mainFrameJFrame.setVisible(true);
         controller.stopScenarioExecution();
     }
 
     public void scenarioLaunchingIsFinished(String msg) {
+        scenarioLaunchingJFrame.setjLabelText("Execution finished.");
         displayPopUp("Scenario launching is finished", "Scenario " + msg + ". \nYou can now see results in the result file or in Kibana", JOptionPane.INFORMATION_MESSAGE);
         scenarioLaunchingJFrame.setjButtonStopVisible(false); 
         scenarioLaunchingJFrame.setjButtonStopVisible(false);

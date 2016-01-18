@@ -1,6 +1,5 @@
 package com.esbqualificationtool.mq;
 
-import com.esbqualificationtool.flowlauncher.FlowLauncher;
 import com.esbqualificationtool.consumerlauncher.*;
 import com.esbqualificationtool.flowlauncher.FlowLauncherExecutor;
 import com.rabbitmq.client.AMQP;
