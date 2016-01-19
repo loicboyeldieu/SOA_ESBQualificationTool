@@ -25,7 +25,7 @@ public class ElasticsearchUtils {
         df.setTimeZone(tz);
         String nowAsISO = df.format(new Date());
         jsonObj.put("postDate", nowAsISO);
-        jsonObj.put("requestID", System.currentTimeMillis());
+       // jsonObj.put("requestID", System.currentTimeMillis());
 
         System.out.println("[ElasticsearchUtils] Ready to send :\n " + jsonObj.toString());
 

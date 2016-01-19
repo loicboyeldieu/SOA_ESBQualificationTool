@@ -86,9 +86,9 @@ public class FlowLauncher {
         for (int i = 0; i < requestToProducers; i++) {
             RequestToProducerAbstract requestObject = (RequestToProducerAbstract) requestToProducerList.get(i);
             if (requestObject.isAlive()) {
-
+                  System.out.println("[Flow Launcher]  1 Thread has to be killed");
                 String requestFailedResult = requestObject.resultToJSONString();
-                requestObject.destroy();
+                requestObject.stop() ; 
                 System.out.println("[Flow Launcher]  1 Thread killed");
 
                 SenderToResultQueue resultFailSender = new SenderToResultQueue();

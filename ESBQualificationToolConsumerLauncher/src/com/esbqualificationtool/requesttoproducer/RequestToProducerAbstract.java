@@ -15,12 +15,14 @@ public abstract class RequestToProducerAbstract extends Thread {
     private Flow flow;
     private long RTT;
     private int success;
+    private long reqID ;
 
     public RequestToProducerAbstract(Request request, Flow flow) {
         this.request = request;
         this.flow = flow;
         this.RTT = -1;
         this.success = 0;
+        this.reqID = System.currentTimeMillis() ;
     }
 
     @Override
@@ -50,6 +52,7 @@ public abstract class RequestToProducerAbstract extends Thread {
             if (success != 0) {
                 jsonRequestResult.put("RTT", RTT);
             }
+            jsonRequestResult.put("requestID", reqID);
             jsonRequestResult.put("producer", request.getProducer().value());
             jsonRequestResult.put("consumer", flow.getConsumer());
             jsonRequestResult.put("flowId", flow.getId());

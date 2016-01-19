@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 public class ReceiverFromResultQueue extends Thread {
 
     // TODO Configuration file
-   //private static final int CONSUMERS_NUMBER = 2;
+    private static final int CONSUMERS_NUMBER = 2;
     public static final String FILE_TEMP = "resultsFileTemp";
     private static final String EXCHANGE_NAME = "requestResult";
     private static final String QUEUE_HOST = "192.168.0.104";
@@ -81,7 +81,7 @@ public class ReceiverFromResultQueue extends Thread {
                     if (resultString.equals(READY_MESSAGE)) {
                         consumerReadyMessages++;
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Ready message received");
-                        if (consumerReadyMessages == nbflows) {
+                        if (consumerReadyMessages == CONSUMERS_NUMBER) {
                             controller.getView().scenarioIsReadyToBeStarted();
                             System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] All Consumers are ready to start");
                         }
@@ -89,7 +89,7 @@ public class ReceiverFromResultQueue extends Thread {
                         // problem if many flows sent to same consumer
                         consumerStoppedMessages++;
                         System.out.println("[ReceiverFromResultsQueue - ConsumerHandleDelivery] Flow stop message received");
-                        if (consumerStoppedMessages == nbflows) {
+                        if (consumerStoppedMessages == CONSUMERS_NUMBER) {
                             needToBeTerminated = true;
                         }
                     } else if (resultString.equals(END_FLOW_RESULTS)) {

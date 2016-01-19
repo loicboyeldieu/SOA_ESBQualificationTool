@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="ScenarioSchema.xsd">
-    <name>Scenario Test</name>
+    <name>Scenario Test 2</name>
     <flow id="1">
         <consumer>consumer1</consumer>
         <startTimeInMs>5</startTimeInMs>
@@ -16,16 +16,16 @@
                 <request id="2">
             <producer>producer1</producer>
             <messageSize>128</messageSize>
-            <processingTimeInMs>10</processingTimeInMs>
+            <processingTimeInMs>30000</processingTimeInMs>
         </request>
                 <request id="3">
             <producer>producer1</producer>
             <messageSize>56</messageSize>
-            <processingTimeInMs>20</processingTimeInMs>
+            <processingTimeInMs>20000</processingTimeInMs>
         </request>
     </flow>
         <flow id="2">
-        <consumer>consumer2</consumer>
+        <consumer>consumer1</consumer>
         <startTimeInMs>5</startTimeInMs>
         <totalExecTimeInSec>30</totalExecTimeInSec>
         <frequencyInSec>10</frequencyInSec>
